@@ -1,4 +1,4 @@
 calendar
 ========
 
-a new calendar has month/week/day views
+This is a new calendar has month/week/day views
