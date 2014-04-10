@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>日历开发测试</title>
+    <link type="text/css" href="../lib/css/style.css" rel="stylesheet">
+
+    <style type="text/css">
+        body{overflow:auto;height: 100%;width: 100%;}
+    </style>
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8"/>
+</head>
+<body id="body">
+
+
+    <script type="text/javascript" src="../lib/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="../lib/jquery.json-2.3.js"></script>
+    <script type="text/javascript" src="../lib/jquery.jqote2.js"></script>
+    <script type="text/javascript" src="../lib/sharkjs-0.0.1.js"></script>
+
+    <script type="text/javascript" src="../src/main.js"></script>
+    <script type="text/javascript" src="../src/util/dateutil.js"></script>
+    <script type="text/javascript" src="../src/view/MonthView.js"></script>
+    <script type="text/javascript" src="../src/view/WeekView.js"></script>
+    <script type="text/javascript" src="../src/view/DayView.js"></script>
+    <script type="text/javascript" src="../src/Event.js"></script>
+    <script type="text/javascript" src="../src/EventManager.js"></script>
+    <script type="text/javascript" src="../src/Calendar.js"></script>
+    
+    <script type="text/javascript">
+    var body = $(document.body);
+    var width = body.width();
+    var height = body.height();
+    var cal = new fc.Calendar({
+        width : width - 100,
+        height : height - 50,
+        defaultView : 'month'
+    },{
+        fetchEvents : function (start, end, defer) {
+            var events = [];
+            for (var i = 0; i < 100; i++) {
+                var start = new Date();
+                start.setDate(parseInt(Math.random() * 50));
+                events.push({
+                    title : 'test event name ' + i,
+                    start : start
+                });
+            };
+
+            defer.resolve(start, end, events);
+        }
+    });
+
+    cal.render();
+
+    body.append(cal.getContainer().getEle());
+    </script>
+</body>
+</html>
