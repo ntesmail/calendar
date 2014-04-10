@@ -1,8 +1,13 @@
-(function () {
+(function() {
 
     fc.Event = Event;
 
-    function Event (data, settings) {
+    /**
+     * 日历事件对象
+     * @param {[type]} data     [description]
+     * @param {[type]} settings [description]
+     */
+    function Event(data, settings) {
         var title, start, type, end, repeate;
 
         title = data.title;
