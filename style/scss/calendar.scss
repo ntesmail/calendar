@@ -1,0 +1,14 @@
+/**
+* @name		young_calendar
+* @author:  Cc
+* @date:    2014-04
+==================================== */
+
+/* mixin、placeholder
+------------------- */
+@import "value";
+
+
+/* calendar
+------------------- */
+.dd{@extend %inline-block;}
