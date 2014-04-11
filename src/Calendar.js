@@ -27,23 +27,27 @@
             currentViewName,
             // 当前视图对象
             currentView,
+            // 当前filters
+            currentFilters = data.filters,
+            // renderEvents
+            onRenderEvents = settings.onRenderEvents,
             // event缓存管理
             eventManager;
         // 月视图的配置
         var monthOpt = {
-            headerHeight : 20
+            headerHeight: 20
         };
         // 周视图的配置
         var weekOpt = {
-            headerHeight : 20,
+            headerHeight: 20,
             // 左侧宽度
-            leftHeaderWidth : 40
+            leftHeaderWidth: 40
         };
         // 日视图的配置
         var dayOpt = {
-            headerHeight : 20,
+            headerHeight: 20,
             // 左侧宽度
-            leftHeaderWidth : 40
+            leftHeaderWidth: 40
         };
 
         var that = this;
@@ -54,7 +58,10 @@
         that.prev = prev;
         that.next = next;
         that.changeView = changeView;
-
+        that.changeFilters = changeFilters;
+        that.getFilters = getFilters;
+        // render
+        that.renderEvents = renderEvents;
         /**
          * 生成ui
          * @return {[type]} [description]
@@ -102,11 +109,53 @@
          * @return {void}
          */
         function changeView(viewName) {
-            if(currentViewName !== viewName) {
+            if (currentViewName !== viewName) {
                 // 切换视图
                 renderView(viewName);
             }
         }
+
+        /**
+         * 改变过滤条件
+         * @param  {object} filters 过滤条件
+         * @return {void}
+         */
+        function changeFilters(filters) {
+            // 更换了filter
+            currentFilters = filters;
+            // 切换视图
+            renderView(currentViewName);
+        }
+
+        /**
+         * 获取filters
+         * @return {object} filters
+         */
+        function getFilters() {
+            return currentFilters;
+        }
+
+        /**
+         * render
+         * @param  {Block} timeBlock block
+         * @param  {Array} events    events array
+         * @return {void}
+         */
+        function renderEvents(timeBlock, events) {
+            // 当前的filters
+            if (typeof currentFilters !== 'undefined') {
+                var filterList = [];
+                for (var key in currentFilters) {
+                    filterList.push(currentFilters[key]);
+                }
+                var showEvents = fc.util.filterEvents(events, filterList);
+
+                onRenderEvents(timeBlock, showEvents);
+            } else {
+                onRenderEvents(timeBlock, events);
+            }
+        }
+
         /**
          * 生成各个视图
          * @param  {String} viewName [description]
@@ -120,7 +169,7 @@
                 day = new Date();
             }
 
-            if(currentView) {
+            if (currentView) {
                 currentView.hide();
             }
             switch (viewName) {
@@ -137,7 +186,7 @@
 
             // 当前视图名称
             currentViewName = viewName;
-            
+
             currentView.render(day);
             // 添加进去
             container.addChild(currentView.getContainer());

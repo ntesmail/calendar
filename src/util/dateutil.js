@@ -5,6 +5,8 @@
     fc.util.getDayRange = getDayRange;
     fc.util.clearTime = clearTime;
     fc.util.getDayNumber = getDayNumber;
+    fc.util.filterEvents = filterEvents;
+
     /**
      * 获取某一时刻所在月份起始到结束
      * @param  {Date} d 某一时刻
@@ -91,10 +93,45 @@
         return d;
     }
 
+    /**
+     * 获取某个时间对应的天的相对天数
+     * @param  {Date} d 某天
+     * @return {Number}  相对天数
+     */
     function getDayNumber(d) {
         var day = new Date(d);
         clearTime(day);
         // 取得天数
         return Math.floor(day.getTime() / (24 * 60 * 60 * 1000));
+    }
+
+    /**
+     * 过滤events
+     * @param  {Array} events  事件 Event array
+     * @param  {Array} filters 过滤方法 Function array
+     * @return {Array}       过滤后的events
+     */
+    function filterEvents(events, filters){
+        // 检查是否有返回false的
+        if(typeof events !== 'undefined' && events.length > 0 
+            && typeof filters !== 'undefined' && filters.length > 0) {
+            var list = [];
+            for (var i = 0; i < events.length; i++) {
+                var valid = true;
+                for (var j = 0; j < filters.length; j++) {
+                    if(valid) {
+                        if(!filters[j](events[i])) {
+                            valid = false;
+                        }
+                    }
+                };
+                if(valid) {
+                    list.push(events[i]);
+                }
+            };
+            return list;
+        } else {
+            return events;
+        }
     }
 })();

@@ -92,12 +92,12 @@
 
                 var head = new shark.Container('<div>' + headerText[i] + '</div>');
                 head.getEle().css({
-                    width : blockWidth,
-                    height : headerHeight,
-                    position : 'absolute',
-                    top : 0,
-                    border : 'solid 1px green',
-                    left : leftHeaderWidth + blockWidth * i
+                    width: blockWidth,
+                    height: headerHeight,
+                    position: 'absolute',
+                    top: 0,
+                    border: 'solid 1px green',
+                    left: leftHeaderWidth + blockWidth * i
                 });
                 container.addChild(head);
             }
@@ -111,12 +111,12 @@
 
                 var head = new shark.Container('<div>' + headerText[i] + '</div>');
                 head.getEle().css({
-                    width : leftHeaderWidth,
-                    height : blockHeight,
-                    position : 'absolute',
-                    top : headerHeight + blockHeight * i,
-                    border : 'solid 1px green',
-                    left : 0
+                    width: leftHeaderWidth,
+                    height: blockHeight,
+                    position: 'absolute',
+                    top: headerHeight + blockHeight * i,
+                    border: 'solid 1px green',
+                    left: 0
                 });
                 container.addChild(head);
             }
@@ -190,7 +190,7 @@
                     var dayEvents = events[dayKey];
 
                     var sortedEvents = [];
-                    if(dayEvents.length > 0) {
+                    if (dayEvents.length > 0) {
                         var startTime = block.getDate();
                         var endTime = new Date(startTime);
                         // 6个小时
@@ -198,14 +198,14 @@
                         for (var j = 0; j < dayEvents.length; j++) {
                             var dayEvent = dayEvents[j];
 
-                            if(dayEvent.getStart() < endTime && dayEvent.getStart() >= startTime) {
+                            if (dayEvent.getStart() < endTime && dayEvent.getStart() >= startTime) {
                                 sortedEvents.push(dayEvent);
                             }
                         };
                     }
 
                     // 过滤一下events
-                    block.renderEvents(sortedEvents);
+                    calendar.renderEvents(block, sortedEvents);
                 };
             })
             calendar.getEventManager().fetch(start, end, defer);
@@ -240,7 +240,6 @@
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
-        that.renderEvents = renderEvents;
         that.resize = resize;
 
         /**
@@ -303,24 +302,6 @@
             // TODO
         }
 
-        /**
-         * 生成日历事件
-         * @param  {Array} events Event Array
-         * @return {void}
-         */
-        function renderEvents(events) {
-            // 先按时间进行排序处理
-            events.sort(function(x, y){
-                return x.getStart() - y.getStart();
-            });
-            for (var i = 0; i < events.length; i++) {
-                var event = events[i];
-                // 日历事件
-                container.getEle().append('<div>' + event.getStart() + '</div>');
-            };
-
-            checkOverflow();
-        }
     }
 
 })();

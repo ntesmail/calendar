@@ -106,16 +106,16 @@
                 // 当前天
                 var dayKey = fc.util.getDayNumber(currentDate);
                 var dayEvents = events[dayKey];
-                if(typeof dayEvents !== 'undefined' && dayEvents.length > 0) {
+                if (typeof dayEvents !== 'undefined' && dayEvents.length > 0) {
                     // 先按时间进行排序处理
-                    dayEvents.sort(function(x, y){
+                    dayEvents.sort(function(x, y) {
                         return x.getStart() - y.getStart();
                     });
                     // 合并时间相同的项
                     var sortedEvents = {};
                     for (var i = 0; i < dayEvents.length; i++) {
                         var dayEvent = dayEvents[i];
-                        if(sortedEvents[dayEvent.getStart()]) {
+                        if (sortedEvents[dayEvent.getStart()]) {
                             sortedEvents[dayEvent.getStart()].push(dayEvent);
                         } else {
                             sortedEvents[dayEvent.getStart()] = [dayEvent];
@@ -132,15 +132,14 @@
                         var block = new DayTimeBlock(dayData);
                         block.render();
                         // 事件
-                        block.renderEvents(sortedEvents[eventKey]);
+                        calendar.renderEvents(block, sortedEvents[eventKey]);
                         // 加到页面中
                         container.addChild(block.getContainer());
                     };
                 }
-            })
+            });
             calendar.getEventManager().fetch(start, end, defer);
         }
-
     }
 
 
@@ -167,7 +166,6 @@
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
-        that.renderEvents = renderEvents;
         that.resize = resize;
 
         /**
@@ -212,21 +210,6 @@
             container.getEle().css({
                 width: width
             });
-        }
-
-
-        /**
-         * 生成日历事件
-         * @param  {Array} events Event Array
-         * @return {void}
-         */
-        function renderEvents(events) {
-            for (var i = 0; i < events.length; i++) {
-                var event = events[i];
-                // 日历事件
-                container.getEle().append('<div>' + event.getStart() + '</div>');
-            };
-
         }
     }
 

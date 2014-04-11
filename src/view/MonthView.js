@@ -90,12 +90,12 @@
             for (var i = 0; i < 7; i++) {
                 var head = new shark.Container('<div>' + headerText[i] + '</div>');
                 head.getEle().css({
-                    width : blockWidth,
-                    height : headerHeight,
-                    position : 'absolute',
-                    top : 0,
-                    border : 'solid 1px green',
-                    left : blockWidth * i
+                    width: blockWidth,
+                    height: headerHeight,
+                    position: 'absolute',
+                    top: 0,
+                    border: 'solid 1px green',
+                    left: blockWidth * i
                 });
                 container.addChild(head);
             }
@@ -163,8 +163,7 @@
                     var dayDate = dayBlock.getDate();
 
                     var dayKey = fc.util.getDayNumber(dayDate);
-
-                    dayBlock.renderEvents(events[dayKey]);
+                    calendar.renderEvents(dayBlock, events[dayKey]);
                 };
             })
             calendar.getEventManager().fetch(start, end, defer);
@@ -199,7 +198,6 @@
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
-        that.renderEvents = renderEvents;
         that.resize = resize;
 
         /**
@@ -217,7 +215,6 @@
         function getDate() {
             return currentDate;
         }
-
 
 
         /**
@@ -252,35 +249,6 @@
                 top: posTop,
                 left: posLeft
             });
-            // 检查一下
-            checkOverflow();
-        }
-
-        /**
-         * 检查是不是超出了
-         * @return {void}
-         */
-        function checkOverflow() {
-            // TODO
-        }
-
-        /**
-         * 生成日历事件
-         * @param  {Array} events Event Array
-         * @return {void}
-         */
-        function renderEvents(events) {
-            // 先按时间进行排序处理
-            events.sort(function(x, y){
-                return x.getStart() - y.getStart();
-            });
-            for (var i = 0; i < events.length; i++) {
-                var event = events[i];
-                // 日历事件
-                container.getEle().append('<div>' + event.getStart() + '</div>');
-            };
-
-            checkOverflow();
         }
     }
 

@@ -45,6 +45,7 @@
                 var start = new Date();
                 start.setDate(parseInt(Math.random() * 50));
                 start.setHours(parseInt(Math.random() * 24));
+                start.setMinutes(parseInt(Math.random() * 60));
                 events.push({
                     title : 'test event name ' + i,
                     start : start
@@ -53,8 +54,13 @@
 
             defer.resolve(start, end, events);
         },
-        renderEvent : function() {
+        onRenderEvents : function(timeBlock, showEvents) {
+            for (var i = 0; i < showEvents.length; i++) {
+                var event = showEvents[i];
 
+                // 日历事件
+                timeBlock.getContainer().getEle().append('<div>' + event.getStart() + '</div>');
+            };
         }
     });
 
@@ -80,6 +86,25 @@
     toolbar.addChild(new shark.Button({name : '日'}, {onclick: function(){
         cal.changeView('day');
     }}));
+
+    var filters = {};
+    toolbar.addChild(new shark.Button({name : '过滤条件1'}, {onclick: function(){
+        function filter(event){
+            return event.getStart().getHours() % 2 === 0;
+        }
+        filters['filter1'] = filter;
+        cal.changeFilters(filters);
+    }}));
+
+    toolbar.addChild(new shark.Button({name : '过滤条件2'}, {onclick: function(){
+        function filter(event){
+            return event.getStart().getMinutes() % 2 === 0;
+        }
+        filters['filter2'] = filter;
+        cal.changeFilters(filters);
+    }}));
+
+
 
     toolbar.addChild(new shark.Text({text : '当前时间'}));
 
