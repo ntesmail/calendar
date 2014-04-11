@@ -24,37 +24,26 @@
             // 名称 month,week,day
             defaultView = data.defaultView || 'month',
             // 当前视图
+            currentViewName,
+            // 当前视图对象
             currentView,
-            // event管理
-            eventManager,
-            // 视图缓存
-            views = {};
+            // event缓存管理
+            eventManager;
         // 月视图的配置
         var monthOpt = {
-            minHeight: 100,
-            minWidth: 200
+            headerHeight : 20
         };
         // 周视图的配置
         var weekOpt = {
-            minHeight: 100,
-            minWidth: 200,
-            // 开始时间
-            startTime: '00:00:00',
-            // 结束时间
-            endTime: '24:00:00',
-            // 间隔时间
-            splitTime: '6:00:00'
+            headerHeight : 20,
+            // 左侧宽度
+            leftHeaderWidth : 40
         };
         // 日视图的配置
         var dayOpt = {
-            minHeight: 100,
-            minWidth: 200,
-            // 开始时间
-            startTime: '00:00:00',
-            // 结束时间
-            endTime: '24:00:00',
-            // 间隔时间
-            splitTime: '24:00:00'
+            headerHeight : 20,
+            // 左侧宽度
+            leftHeaderWidth : 40
         };
 
         var that = this;
@@ -62,7 +51,14 @@
         that.render = render;
         that.getContainer = getContainer;
         that.getEventManager = getEventManager;
+        that.prev = prev;
+        that.next = next;
+        that.changeView = changeView;
 
+        /**
+         * 生成ui
+         * @return {[type]} [description]
+         */
         function render() {
             eventManager = new fc.EventManager({
                 fetchEvents: settings.fetchEvents
@@ -80,41 +76,73 @@
             return container;
         }
 
-        function renderView(viewName, day) {
-            if (currentView !== viewName) {
-                var view = views[viewName];
-                if (typeof view === 'undefined') {
-                    switch (viewName) {
-                        case 'month':
-                            view = new fc.MonthView(data, settings, monthOpt, that);
-                            break;
-                        case 'week':
-                            view = new fc.WeekView(data, settings, weekOpt, that);
-                            break;
-                        case 'day':
-                            view = new fc.DayView(data, settings, dayOpt, that);
-                            break;
-                    }
-                    views[viewName] = view;
-                }
-                if (currentView) {
-                    views[currentView].hide();
-                }
-                // 直接切换过去
-                // 切换当前的
-                currentView = viewName;
-                // render
-                if (!day) {
-                    // 当天时间
-                    day = new Date();
-                }
+        /**
+         * 下一个
+         * @return {void}
+         */
+        function next() {
+            var day = currentView.getNext();
+            // 新视图
+            renderView(currentViewName, day);
+        }
 
-                view.render(day);
-                // 添加进去
-                container.addChild(view.getContainer());
-                // 显示
-                view.show();
+        /**
+         * 前一个
+         * @return {void}
+         */
+        function prev() {
+            var day = currentView.getPrev();
+            // 新视图
+            renderView(currentViewName, day);
+        }
+
+        /**
+         * 切换视图
+         * @param  {string} viewName 视图名称
+         * @return {void}
+         */
+        function changeView(viewName) {
+            if(currentViewName !== viewName) {
+                // 切换视图
+                renderView(viewName);
             }
+        }
+        /**
+         * 生成各个视图
+         * @param  {String} viewName [description]
+         * @param  {Date} day      日期，optional，默认今天
+         * @return {void}
+         */
+        function renderView(viewName, day) {
+            // render
+            if (!day) {
+                // 当天时间
+                day = new Date();
+            }
+
+            if(currentView) {
+                currentView.hide();
+            }
+            switch (viewName) {
+                case 'month':
+                    currentView = new fc.MonthView(data, settings, monthOpt, that);
+                    break;
+                case 'week':
+                    currentView = new fc.WeekView(data, settings, weekOpt, that);
+                    break;
+                case 'day':
+                    currentView = new fc.DayView(data, settings, dayOpt, that);
+                    break;
+            }
+
+            // 当前视图名称
+            currentViewName = viewName;
+            
+            currentView.render(day);
+            // 添加进去
+            container.addChild(currentView.getContainer());
+            // 显示
+            currentView.show();
         }
     }
 

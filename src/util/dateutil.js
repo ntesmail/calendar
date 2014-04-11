@@ -92,7 +92,9 @@
     }
 
     function getDayNumber(d) {
+        var day = new Date(d);
+        clearTime(day);
         // 取得天数
-        return Math.floor(d.getTime() / (24 * 60 * 60 * 1000));
+        return Math.floor(day.getTime() / (24 * 60 * 60 * 1000));
     }
 })();

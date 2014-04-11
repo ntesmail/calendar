@@ -6,12 +6,16 @@
 
     <style type="text/css">
         body{overflow:auto;height: 100%;width: 100%;}
+        #calendarContainer{position:relative;height: 100%;width: 100%;}
     </style>
     <meta http-equiv="Content-type" content="text/html;charset=utf-8"/>
 </head>
 <body id="body">
+    <div id="calendarToolbar">
 
+    </div>
 
+    <div id="calendarContainer"></div>
     <script type="text/javascript" src="../lib/jquery-1.8.3.js"></script>
     <script type="text/javascript" src="../lib/jquery.json-2.3.js"></script>
     <script type="text/javascript" src="../lib/jquery.jqote2.js"></script>
@@ -27,19 +31,20 @@
     <script type="text/javascript" src="../src/Calendar.js"></script>
     
     <script type="text/javascript">
-    var body = $(document.body);
+    var body = $('#calendarContainer');
     var width = body.width();
     var height = body.height();
     var cal = new fc.Calendar({
         width : width - 100,
-        height : height - 50,
+        height : height - 100,
         defaultView : 'month'
     },{
         fetchEvents : function (start, end, defer) {
             var events = [];
-            for (var i = 0; i < 100; i++) {
+            for (var i = 0; i < 1000; i++) {
                 var start = new Date();
                 start.setDate(parseInt(Math.random() * 50));
+                start.setHours(parseInt(Math.random() * 24));
                 events.push({
                     title : 'test event name ' + i,
                     start : start
@@ -47,6 +52,9 @@
             };
 
             defer.resolve(start, end, events);
+        },
+        renderEvent : function() {
+
         }
     });
 
@@ -54,10 +62,30 @@
 
     body.append(cal.getContainer().getEle());
 
-    var a = new fc.Event({title : 'evta'});
-    var b = new fc.Event({title : 'evtb'});
+    // toolbar
+    var toolbar = new shark.HrzLine();
+    toolbar.addChild(new shark.Button({name : 'prev'}, {onclick: function(){
+        cal.prev();
+    }}));
+    toolbar.addChild(new shark.Button({name : 'next'}, {onclick: function(){
+        cal.next();
+    }}));
+    toolbar.addChild(new shark.Button({name : '月'}, {onclick: function(){
+        cal.changeView('month');
+    }}));
 
-    console.log(a.getTitle());
+    toolbar.addChild(new shark.Button({name : '周'}, {onclick: function(){
+        cal.changeView('week');
+    }}));
+    toolbar.addChild(new shark.Button({name : '日'}, {onclick: function(){
+        cal.changeView('day');
+    }}));
+
+    toolbar.addChild(new shark.Text({text : '当前时间'}));
+
+
+    $('#calendarToolbar').append(toolbar.getEle());
+
     </script>
 </body>
 </html>

@@ -1,32 +1,34 @@
 (function() {
 
-    fc.MonthView = MonthView;
+    fc.WeekView = WeekView;
 
 
     /**
-     * 月视图
+     * 周视图
      * @param {Object} data     数据相关的配置
      * @param {Object} settings 事件相关的
-     * @param {Object} monthOpt 月视图配置项
+     * @param {Object} weekOpt 周视图配置项
      * @param {Calendar} calendar 日历对象
      */
-    function MonthView(data, settings, monthOpt, calendar) {
+    function WeekView(data, settings, weekOpt, calendar) {
         // 获取开始到结束时间
         var start,
             end,
             // 当前所在month
             currentMonth,
-            // 当前时间
             currentDate,
             container,
-            dayList = [],
+            blockList = [],
             blockWidth,
             blockHeight,
             headerHeight,
+            leftHeaderWidth,
             calendar = calendar;
 
         // 高度
-        headerHeight = monthOpt.headerHeight;
+        headerHeight = weekOpt.headerHeight;
+        // 左侧宽度
+        leftHeaderWidth = weekOpt.leftHeaderWidth;
 
         container = new shark.Container('<div></div>');
 
@@ -38,7 +40,6 @@
         that.getCurrent = getCurrent;
         that.getNext = getNext;
         that.getPrev = getPrev;
-
         /**
          * 容器对象
          * @return {shark.Container} 容器对象
@@ -57,29 +58,29 @@
 
         /**
          * 当前时间
-         * @return {Date} 下个月
+         * @return {Date} 当前时间
          */
         function getCurrent() {
             return currentDate;
         }
 
         /**
-         * 下个月
-         * @return {Date} 下个月
+         * 下个星期
+         * @return {Date} 下个星期
          */
         function getNext() {
-            var next = fc.util.getMonthRange(currentDate).start;
-            next.setMonth(next.getMonth() + 1);
+            var next = fc.util.getWeekRange(currentDate).start;
+            next.setDate(next.getDate() + 7);
             return next;
         }
 
         /**
-         * 上个月
-         * @return {Date} 上个月
+         * 上个星期
+         * @return {Date} 上个星期
          */
         function getPrev() {
-            var next = fc.util.getMonthRange(currentDate).start;
-            next.setMonth(next.getMonth() - 1);
+            var next = fc.util.getWeekRange(currentDate).start;
+            next.setDate(next.getDate() - 7);
             return next;
         }
 
@@ -88,6 +89,7 @@
             // 周日到周六
             var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             for (var i = 0; i < 7; i++) {
+
                 var head = new shark.Container('<div>' + headerText[i] + '</div>');
                 head.getEle().css({
                     width : blockWidth,
@@ -95,12 +97,30 @@
                     position : 'absolute',
                     top : 0,
                     border : 'solid 1px green',
-                    left : blockWidth * i
+                    left : leftHeaderWidth + blockWidth * i
                 });
                 container.addChild(head);
             }
         }
 
+        function renderVerticalHeader() {
+            // header
+            // 周日到周六
+            var headerText = ['凌晨', '上午', '下午', '晚上'];
+            for (var i = 0; i < 4; i++) {
+
+                var head = new shark.Container('<div>' + headerText[i] + '</div>');
+                head.getEle().css({
+                    width : leftHeaderWidth,
+                    height : blockHeight,
+                    position : 'absolute',
+                    top : headerHeight + blockHeight * i,
+                    border : 'solid 1px green',
+                    left : 0
+                });
+                container.addChild(head);
+            }
+        }
         /**
          * 渲染视图
          * @param  {Date} date 某天
@@ -109,37 +129,39 @@
         function render(date) {
             currentDate = date;
             // 获取时间的range
-            var range = fc.util.getMonthRange(date);
+            var range = fc.util.getWeekRange(date);
 
             // 处理方格的前面和后面
-            start = fc.util.getWeekRange(range.start).start;
-            end = fc.util.getWeekRange(range.end).end;
+            start = range.start;
+            end = range.end;
             // 当前月
             currentMonth = date.getMonth();
 
-            // 周数
-            var endDate = fc.util.clearTime(end);
-            var weekCount = (endDate - start) / (7 * 24 * 60 * 60 * 1000);
+            // 纵向的数量,分成四块
+            var verticalCount = 4;
             // block的高宽
             blockWidth = Math.floor(data.width / 7);
-            blockHeight = Math.floor(data.height / weekCount);
+            blockHeight = Math.floor(data.height / verticalCount);
 
             // 头部
             renderHeader();
+            // 左侧
+            renderVerticalHeader()
 
-            for (var i = 0; i < weekCount; i++) {
+            for (var i = 0; i < verticalCount; i++) {
                 // 周几
                 for (var j = 0; j < 7; j++) {
                     var dayDate = new Date(start);
-                    dayDate.setDate(dayDate.getDate() + i * 7 + j);
+                    dayDate.setDate(dayDate.getDate() + j);
+                    dayDate.setHours(i * (24 / verticalCount));
                     var dayData = {
                         width: blockWidth,
                         height: blockHeight,
                         posTop: headerHeight + blockHeight * i,
-                        posLeft: blockWidth * j,
+                        posLeft: leftHeaderWidth + blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new MonthDayBlock(dayData);
+                    var dayBlock = new WeekTimeBlock(dayData);
                     dayBlock.render();
 
                     // 设置一下颜色等以作区别
@@ -149,7 +171,7 @@
                     // 加到页面中
                     container.addChild(dayBlock.getContainer());
 
-                    dayList.push(dayBlock);
+                    blockList.push(dayBlock);
                 }
             }
 
@@ -157,14 +179,33 @@
             // 获取的
             var defer = $.Deferred();
             defer.done(function(events) {
-                for (var i = 0; i < dayList.length; i++) {
+
+                for (var i = 0; i < blockList.length; i++) {
                     // 相关的事件
-                    var dayBlock = dayList[i];
-                    var dayDate = dayBlock.getDate();
+                    var block = blockList[i];
+                    var dayDate = block.getDate();
 
                     var dayKey = fc.util.getDayNumber(dayDate);
+                    // 当天的事件
+                    var dayEvents = events[dayKey];
 
-                    dayBlock.renderEvents(events[dayKey]);
+                    var sortedEvents = [];
+                    if(dayEvents.length > 0) {
+                        var startTime = block.getDate();
+                        var endTime = new Date(startTime);
+                        // 6个小时
+                        endTime.setHours(endTime.getHours() + 6);
+                        for (var j = 0; j < dayEvents.length; j++) {
+                            var dayEvent = dayEvents[j];
+
+                            if(dayEvent.getStart() < endTime && dayEvent.getStart() >= startTime) {
+                                sortedEvents.push(dayEvent);
+                            }
+                        };
+                    }
+
+                    // 过滤一下events
+                    block.renderEvents(sortedEvents);
                 };
             })
             calendar.getEventManager().fetch(start, end, defer);
@@ -177,7 +218,7 @@
      * 某一天的块
      * @param {[type]} date [description]
      */
-    function MonthDayBlock(data, settings, monthOpt) {
+    function WeekTimeBlock(data, settings, weekOpt) {
         var container,
             width,
             height,
@@ -217,8 +258,6 @@
         function getDate() {
             return currentDate;
         }
-
-
 
         /**
          * 生成ui
