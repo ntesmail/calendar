@@ -30,30 +30,44 @@
         // 左侧宽度
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
-        container = new shark.Container('<div></div>');
+        container = $('<div></div>');
 
         var that = this;
         that.getContainer = getContainer;
         that.render = render;
         that.hide = hide;
         that.show = show;
+        that.destroy = destroy;
         that.getCurrent = getCurrent;
         that.getNext = getNext;
         that.getPrev = getPrev;
         /**
          * 容器对象
-         * @return {shark.Container} 容器对象
+         * @return {Dom} 容器对象
          */
         function getContainer() {
             return container;
         }
 
         function hide() {
-            container.hide();
+            fc.util.hide(container);
+        }
+
+        function destroy() {
+            // 销毁
+            if(calendar.onDestroy) {
+                calendar.onDestroy(that);
+            }
+            for (var i = 0; i < blockList.length; i++) {
+                blockList[i].destroy();
+            };
+            blockList.length = 0;
+            container.remove();
+            container = null;
         }
 
         function show() {
-            container.show();
+            fc.util.show(container);
         }
 
         /**
@@ -90,8 +104,8 @@
             var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             for (var i = 0; i < 7; i++) {
 
-                var head = new shark.Container('<div>' + headerText[i] + '</div>');
-                head.getEle().css({
+                var head = $('<div>' + headerText[i] + '</div>');
+                head.css({
                     width: blockWidth,
                     height: headerHeight,
                     position: 'absolute',
@@ -99,7 +113,7 @@
                     border: 'solid 1px green',
                     left: leftHeaderWidth + blockWidth * i
                 });
-                container.addChild(head);
+                container.append(head);
             }
         }
 
@@ -109,8 +123,8 @@
             var headerText = ['凌晨', '上午', '下午', '晚上'];
             for (var i = 0; i < 4; i++) {
 
-                var head = new shark.Container('<div>' + headerText[i] + '</div>');
-                head.getEle().css({
+                var head = $('<div>' + headerText[i] + '</div>');
+                head.css({
                     width: leftHeaderWidth,
                     height: blockHeight,
                     position: 'absolute',
@@ -118,7 +132,7 @@
                     border: 'solid 1px green',
                     left: 0
                 });
-                container.addChild(head);
+                container.append(head);
             }
         }
         /**
@@ -162,14 +176,13 @@
                         date: dayDate
                     };
                     var dayBlock = new WeekTimeBlock(dayData);
-                    dayBlock.render();
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
                         // TODO
                     }
                     // 加到页面中
-                    container.addChild(dayBlock.getContainer());
+                    container.append(dayBlock.getContainer());
 
                     blockList.push(dayBlock);
                 }
@@ -205,7 +218,7 @@
                     }
 
                     // 过滤一下events
-                    calendar.renderEvents(block, sortedEvents);
+                    calendar.renderEvents(block, sortedEvents, true);
                 };
             })
             calendar.getEventManager().fetch(start, end, defer);
@@ -227,7 +240,7 @@
             currentDate;
 
         // 容器的样式
-        container = new shark.Container('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = $('<div style="overflow:hidden;border:1px solid black;"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -241,10 +254,13 @@
         that.render = render;
         that.getDate = getDate;
         that.resize = resize;
+        that.destroy = destroy;
 
+        // render
+        that.render();
         /**
          * 获取容器
-         * @return {shark.Container} 容器对象
+         * @return {Dom} 容器对象
          */
         function getContainer() {
             return container;
@@ -264,11 +280,17 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            container.addChild(new shark.Text({
-                text: currentDate.getDate()
-            }));
+            container.append(currentDate.getDate());
         }
 
+
+        /**
+         * 销毁
+         * @return {void}
+         */
+        function destroy() {
+            container = null;
+        }
         /**
          * resize
          * @param  {Number} _width  宽度
@@ -283,7 +305,7 @@
             posTop = _top;
             posLeft = _left;
             // 重新renderUI
-            container.getEle().css({
+            container.css({
                 position: 'absolute',
                 width: width,
                 height: height,

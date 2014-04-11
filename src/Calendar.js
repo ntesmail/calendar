@@ -1,7 +1,7 @@
 (function() {
 
     fc.Calendar = Calendar;
-
+    var calendarContainerTmpl = '<div></div>';
     /**
      * 日历
      * @param {[type]} data     数据
@@ -11,7 +11,7 @@
      *                          {Number} width
      *                          {Number} height
      *                          {String} defaultView
-     *
+     *                          {String} clsName
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候
@@ -20,7 +20,7 @@
     function Calendar(data, settings) {
         var events,
             // 容器，shark.Container
-            container = new shark.Container('<div></div>'),
+            container = $(calendarContainerTmpl),
             // 名称 month,week,day
             defaultView = data.defaultView || 'month',
             // 当前视图
@@ -31,6 +31,8 @@
             currentFilters = data.filters,
             // renderEvents
             onRenderEvents = settings.onRenderEvents,
+            // ondestroy
+            onDestroy = settings.onDestroy,
             // event缓存管理
             eventManager;
         // 月视图的配置
@@ -50,6 +52,11 @@
             leftHeaderWidth: 40
         };
 
+        // 加上clsName
+        if(typeof data.clsName === 'string') {
+            container.addClass(data.clsName)
+        }
+
         var that = this;
         // public
         that.render = render;
@@ -62,9 +69,14 @@
         that.getFilters = getFilters;
         // render
         that.renderEvents = renderEvents;
+        // 销毁
+        that.onDestroy = onDestroy;
+
+        // render
+        that.render();
         /**
          * 生成ui
-         * @return {[type]} [description]
+         * @return {void}
          */
         function render() {
             eventManager = new fc.EventManager({
@@ -141,14 +153,10 @@
          * @param  {Array} events    events array
          * @return {void}
          */
-        function renderEvents(timeBlock, events) {
-            // 当前的filters
-            if (typeof currentFilters !== 'undefined') {
-                var filterList = [];
-                for (var key in currentFilters) {
-                    filterList.push(currentFilters[key]);
-                }
-                var showEvents = fc.util.filterEvents(events, filterList);
+        function renderEvents(timeBlock, events, filter) {
+            if(filter) {
+                // 当前的filters
+                var showEvents = fc.util.filterEvents(events, currentFilters);
 
                 onRenderEvents(timeBlock, showEvents);
             } else {
@@ -160,6 +168,7 @@
          * 生成各个视图
          * @param  {String} viewName [description]
          * @param  {Date} day      日期，optional，默认今天
+         * @private
          * @return {void}
          */
         function renderView(viewName, day) {
@@ -170,7 +179,8 @@
             }
 
             if (currentView) {
-                currentView.hide();
+                currentView.destroy();
+                currentView = null;
             }
             switch (viewName) {
                 case 'month':
@@ -189,7 +199,7 @@
 
             currentView.render(day);
             // 添加进去
-            container.addChild(currentView.getContainer());
+            container.append(currentView.getContainer());
             // 显示
             currentView.show();
         }

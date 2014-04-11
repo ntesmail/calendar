@@ -27,32 +27,45 @@
         // 左侧宽度
         leftHeaderWidth = dayOpt.leftHeaderWidth;
 
-        container = new shark.Container('<div></div>');
+        container = new $('<div></div>');
 
         var that = this;
         that.getContainer = getContainer;
         that.render = render;
         that.hide = hide;
         that.show = show;
+        that.destroy = destroy;
         that.getCurrent = getCurrent;
         that.getNext = getNext;
         that.getPrev = getPrev;
         /**
          * 容器对象
-         * @return {shark.Container} 容器对象
+         * @return {Dom} 容器对象
          */
         function getContainer() {
             return container;
         }
 
         function hide() {
-            container.hide();
+            fc.util.hide(container);
         }
 
         function show() {
-            container.show();
+            fc.util.show(container);
         }
 
+        function destroy() {
+            // 销毁
+            if(calendar.onDestroy) {
+                calendar.onDestroy(that);
+            }
+            for (var i = 0; i < blockList.length; i++) {
+                blockList[i].destroy();
+            };
+            blockList.length = 0;
+            container.remove();
+            container = null;
+        }
         /**
          * 当前时间
          * @return {Date} 当前时间
@@ -124,17 +137,21 @@
 
                     // 显示所有事件
                     for (var eventKey in sortedEvents) {
-                        // 事件时间
-                        var dayData = {
-                            width: blockWidth,
-                            date: sortedEvents[eventKey][0].getStart()
-                        };
-                        var block = new DayTimeBlock(dayData);
-                        block.render();
-                        // 事件
-                        calendar.renderEvents(block, sortedEvents[eventKey]);
-                        // 加到页面中
-                        container.addChild(block.getContainer());
+                        var showEvents = fc.util.filterEvents(sortedEvents[eventKey], calendar.getFilters());
+
+                        if(showEvents.length > 0) {
+                            // 事件时间
+                            var dayData = {
+                                width: blockWidth,
+                                date: showEvents[0].getStart()
+                            };
+                            // 这个block是否显示跟里面的events数量相关
+                            var block = new DayTimeBlock(dayData);
+                            // 事件，不需要filter
+                            calendar.renderEvents(block, showEvents, false);
+                            // 加到页面中
+                            container.append(block.getContainer());
+                        }
                     };
                 }
             });
@@ -156,7 +173,7 @@
             currentDate;
 
         // 容器的样式
-        container = new shark.Container('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = new $('<div style="overflow:hidden;border:1px solid black;"></div>');
         width = data.width;
         // 当前时间
         currentDate = data.date;
@@ -167,10 +184,14 @@
         that.render = render;
         that.getDate = getDate;
         that.resize = resize;
+        that.destroy = destroy;
 
+        // render
+        that.render();
+        
         /**
          * 获取容器
-         * @return {shark.Container} 容器对象
+         * @return {Dom} 容器对象
          */
         function getContainer() {
             return container;
@@ -190,11 +211,17 @@
          */
         function render() {
             resize(data.width);
-            container.addChild(new shark.Text({
-                text: currentDate.getHours() + ':' + currentDate.getMinutes()
-            }));
+            container.append(currentDate.getHours() + ':' + currentDate.getMinutes());
         }
 
+        /**
+         * 销毁
+         * @return {void}
+         */
+        function destroy() {
+            container.remove();
+            container = null;
+        }
         /**
          * resize
          * @param  {Number} _width  宽度
@@ -207,7 +234,7 @@
             width = _width;
 
             // 重新renderUI
-            container.getEle().css({
+            container.css({
                 width: width
             });
         }

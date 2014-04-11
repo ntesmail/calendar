@@ -6,6 +6,8 @@
     fc.util.clearTime = clearTime;
     fc.util.getDayNumber = getDayNumber;
     fc.util.filterEvents = filterEvents;
+    fc.util.hide = hide;
+    fc.util.show = show;
 
     /**
      * 获取某一时刻所在月份起始到结束
@@ -114,13 +116,13 @@
     function filterEvents(events, filters){
         // 检查是否有返回false的
         if(typeof events !== 'undefined' && events.length > 0 
-            && typeof filters !== 'undefined' && filters.length > 0) {
+            && typeof filters !== 'undefined') {
             var list = [];
             for (var i = 0; i < events.length; i++) {
                 var valid = true;
-                for (var j = 0; j < filters.length; j++) {
+                for (var key in filters) {
                     if(valid) {
-                        if(!filters[j](events[i])) {
+                        if(!filters[key](events[i])) {
                             valid = false;
                         }
                     }
@@ -133,5 +135,23 @@
         } else {
             return events;
         }
+    }
+
+    /**
+     * 隐藏container
+     * @param  {Dom} container container
+     * @return {void}
+     */
+    function hide(container) {
+        container.addClass('f-hide');
+    }
+
+    /**
+     * 显示container
+     * @param  {Dom} container container
+     * @return {void}
+     */
+    function show(container) {
+        container.removeClass('f-hide');
     }
 })();

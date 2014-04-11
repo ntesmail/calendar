@@ -59,14 +59,13 @@
                 var event = showEvents[i];
 
                 // 日历事件
-                timeBlock.getContainer().getEle().append('<div>' + event.getStart() + '</div>');
+                timeBlock.getContainer().append('<div>' + event.getStart() + '</div>');
             };
         }
     });
 
-    cal.render();
 
-    body.append(cal.getContainer().getEle());
+    body.append(cal.getContainer());
 
     // toolbar
     var toolbar = new shark.HrzLine();
@@ -101,6 +100,11 @@
             return event.getStart().getMinutes() % 2 === 0;
         }
         filters['filter2'] = filter;
+        cal.changeFilters(filters);
+    }}));
+
+    toolbar.addChild(new shark.Button({name : '清除过滤条件'}, {onclick: function(){
+        filters = {};
         cal.changeFilters(filters);
     }}));
 
