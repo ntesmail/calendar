@@ -38,6 +38,7 @@
         that.getCurrent = getCurrent;
         that.getNext = getNext;
         that.getPrev = getPrev;
+        that.resize = resize;
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -157,6 +158,10 @@
             });
             calendar.getEventManager().fetch(start, end, defer);
         }
+
+        function resize(width, height) {
+
+        }
     }
 
 
@@ -188,7 +193,7 @@
 
         // render
         that.render();
-        
+
         /**
          * 获取容器
          * @return {Dom} 容器对象
@@ -225,9 +230,6 @@
         /**
          * resize
          * @param  {Number} _width  宽度
-         * @param  {Number} _height 高度
-         * @param  {Number} _top    上
-         * @param  {Number} _left   左定位
          * @return {void}
          */
         function resize(_width) {

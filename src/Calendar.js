@@ -67,6 +67,7 @@
         that.changeView = changeView;
         that.changeFilters = changeFilters;
         that.getFilters = getFilters;
+        that.resize = resize;
         // render
         that.renderEvents = renderEvents;
         // 销毁
@@ -202,6 +203,18 @@
             container.append(currentView.getContainer());
             // 显示
             currentView.show();
+        }
+
+        /**
+         * resize
+         * @param  {Number} width  宽度
+         * @param  {Number} height 高度
+         * @return {void}
+         */
+        function resize (width, height) {
+            if(currentView) {
+                currentView.resize(width, height);
+            }
         }
     }
 

@@ -19,12 +19,20 @@
             // 当前时间
             currentDate,
             container,
+            // 头部
+            header,
             blockList = [],
+            weekCount,
+            containerWidth,
+            containerHeight,
             blockWidth,
             blockHeight,
             headerHeight,
             calendar = calendar;
 
+        // 高度宽度
+        containerWidth = data.width;
+        containerHeight = data.height;
         // 高度
         headerHeight = monthOpt.headerHeight;
 
@@ -39,6 +47,7 @@
         that.getCurrent = getCurrent;
         that.getNext = getNext;
         that.getPrev = getPrev;
+        that.resize = resize;
 
         /**
          * 容器对象
@@ -99,6 +108,7 @@
             // header
             // 周日到周六
             var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            header = $('<div></div>');
             for (var i = 0; i < 7; i++) {
                 var head = $('<div>' + headerText[i] + '</div>');
                 head.css({
@@ -109,8 +119,9 @@
                     border: 'solid 1px green',
                     left: blockWidth * i
                 });
-                container.append(head);
+                header.append(head);
             }
+            container.append(header);
         }
 
         /**
@@ -131,10 +142,10 @@
 
             // 周数
             var endDate = fc.util.clearTime(end);
-            var weekCount = (endDate - start) / (7 * 24 * 60 * 60 * 1000);
+            weekCount = (endDate - start) / (7 * 24 * 60 * 60 * 1000);
             // block的高宽
-            blockWidth = Math.floor(data.width / 7);
-            blockHeight = Math.floor(data.height / weekCount);
+            blockWidth = Math.floor(containerWidth / 7);
+            blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部
             renderHeader();
@@ -180,6 +191,41 @@
             calendar.getEventManager().fetch(start, end, defer);
         }
 
+        /**
+         * resize month view.
+         * @param  {Number} width  宽度
+         * @param  {Number} height 高度
+         * @return {void}
+         */
+        function resize(width, height) {
+            containerWidth = width;
+            containerHeight = height;
+            // block的高宽
+            blockWidth = Math.floor(containerWidth / 7);
+            blockHeight = Math.floor(containerHeight / weekCount);
+
+            // 头部
+            var heads = header.children();
+            for (var i = 0; i < heads.length; i++) {
+                $(heads[i]).css({
+                    left : blockWidth * i,
+                    width : blockWidth
+                });
+            };
+             
+            for (var i = 0; i < weekCount; i++) {
+                // 周几
+                for (var j = 0; j < 7; j++) {
+                    var index = i * 7 + j;
+                    blockList[index].resize(
+                        blockWidth, 
+                        blockHeight, 
+                        headerHeight + blockHeight * i,
+                        blockWidth * j
+                    );
+                }
+            }
+        }
     }
 
 
