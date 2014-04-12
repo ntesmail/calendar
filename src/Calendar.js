@@ -1,7 +1,7 @@
 (function() {
 
     fc.Calendar = Calendar;
-    var calendarContainerTmpl = '<div></div>';
+
     /**
      * 日历
      * @param {[type]} data     数据
@@ -20,7 +20,7 @@
     function Calendar(data, settings) {
         var events,
             // 容器，shark.Container
-            container = $(calendarContainerTmpl),
+            container = $('<div class="js-calendar-container"></div>'),
             // 名称 month,week,day
             defaultView = data.defaultView || 'month',
             // 当前视图

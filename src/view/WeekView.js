@@ -38,7 +38,7 @@
         // 左侧宽度
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
-        container = $('<div></div>');
+        container = $('<div class="m-calendar"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -112,42 +112,45 @@
             // header
             // 周日到周六
             var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            header = $('<div></div>');
+            header = [];
             for (var i = 0; i < 7; i++) {
-
-                var head = $('<div>' + headerText[i] + '</div>');
+                var head = $('<div class="can can-week">' + headerText[i] + '</div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
-                    position: 'absolute',
                     top: 0,
-                    border: 'solid 1px green',
                     left: leftHeaderWidth + blockWidth * i
                 });
-                header.append(head);
+                header.push(head);
+                container.append(header);
             }
-            container.append(header);
         }
 
         function renderVerticalHeader() {
             // header
             // 周日到周六
             var headerText = ['凌晨', '上午', '下午', '晚上'];
-            verticalHeader = $('<div></div>');
-            for (var i = 0; i < 4; i++) {
+            verticalHeader = [];
+            var blank = $('<div class="can can-blank"></div>');
+            blank.css({
+                top : 0,
+                left : 0,
+                width : leftHeaderWidth,
+                height : headerHeight
+            });
+            container.append(blank);
 
-                var head = $('<div>' + headerText[i] + '</div>');
+            for (var i = 0; i < 4; i++) {
+                var head = $('<div class="can can-time">' + headerText[i] + '</div>');
                 head.css({
                     width: leftHeaderWidth,
                     height: blockHeight,
-                    position: 'absolute',
                     top: headerHeight + blockHeight * i,
-                    border: 'solid 1px green',
                     left: 0
                 });
-                verticalHeader.append(head);
+                verticalHeader.push(head);
+                container.append(head);
             }
-            container.append(verticalHeader);
         }
         /**
          * 渲染视图
@@ -253,18 +256,16 @@
             blockHeight = Math.floor(containerHeight / verticalCount);
 
             // 头部重新定位
-            var heads = header.children();
-            for (var i = 0; i < heads.length; i++) {
-                $(heads[i]).css({
+            for (var i = 0; i < header.length; i++) {
+                header[i].css({
                     left : leftHeaderWidth + blockWidth * i,
                     width : blockWidth
                 });
             };
 
             // 左侧重新定位
-            var heads = verticalHeader.children();
-            for (var i = 0; i < heads.length; i++) {
-                $(heads[i]).css({
+            for (var i = 0; i < verticalHeader.length; i++) {
+                verticalHeader[i].css({
                     top : headerHeight + blockHeight * i,
                     height : blockHeight
                 });
@@ -300,7 +301,7 @@
             currentDate;
 
         // 容器的样式
-        container = $('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = $('<div class="can can-day"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -366,7 +367,6 @@
             posLeft = _left;
             // 重新renderUI
             container.css({
-                position: 'absolute',
                 width: width,
                 height: height,
                 top: posTop,

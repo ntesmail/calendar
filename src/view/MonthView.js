@@ -36,7 +36,7 @@
         // 高度
         headerHeight = monthOpt.headerHeight;
 
-        container = $('<div></div>');
+        container = $('<div class="m-calendar"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -108,20 +108,18 @@
             // header
             // 周日到周六
             var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            header = $('<div></div>');
+            header = [];
             for (var i = 0; i < 7; i++) {
-                var head = $('<div>' + headerText[i] + '</div>');
+                var head = $('<div class="can can-week">' + headerText[i] + '</div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
-                    position: 'absolute',
                     top: 0,
-                    border: 'solid 1px green',
                     left: blockWidth * i
                 });
-                header.append(head);
+                header.push(head);
+                container.append(head);
             }
-            container.append(header);
         }
 
         /**
@@ -205,9 +203,8 @@
             blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部重新定位
-            var heads = header.children();
-            for (var i = 0; i < heads.length; i++) {
-                $(heads[i]).css({
+            for (var i = 0; i < header.length; i++) {
+                header[i].css({
                     left : blockWidth * i,
                     width : blockWidth
                 });
@@ -242,7 +239,7 @@
             currentDate;
 
         // 容器的样式
-        container = $('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = $('<div class="can can-day"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -308,7 +305,6 @@
             posLeft = _left;
             // 重新renderUI
             container.css({
-                position: 'absolute',
                 width: width,
                 height: height,
                 top: posTop,

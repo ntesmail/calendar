@@ -32,7 +32,7 @@
         // 左侧宽度
         leftHeaderWidth = dayOpt.leftHeaderWidth;
 
-        container = new $('<div></div>');
+        container = new $('<div class="m-calendar"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -200,7 +200,7 @@
             currentDate;
 
         // 容器的样式
-        container = new $('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = new $('<div></div>');
         width = data.width;
         // 当前时间
         currentDate = data.date;
