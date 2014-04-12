@@ -17,11 +17,16 @@
             currentDate,
             container,
             blockList = [],
+            containerWidth,
+            containerHeight,
             blockWidth,
             headerHeight,
             leftHeaderWidth,
             calendar = calendar;
 
+        // 高度宽度
+        containerWidth = data.width;
+        containerHeight = data.height;
         // 高度
         headerHeight = dayOpt.headerHeight;
         // 左侧宽度
@@ -148,6 +153,7 @@
                             };
                             // 这个block是否显示跟里面的events数量相关
                             var block = new DayTimeBlock(dayData);
+                            blockList.push(block);
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
                             // 加到页面中
@@ -159,8 +165,24 @@
             calendar.getEventManager().fetch(start, end, defer);
         }
 
+        /**
+         * resize week view.
+         * @param  {Number} width  宽度
+         * @param  {Number} height 高度
+         * @return {void}
+         */
         function resize(width, height) {
+            containerWidth = width;
+            containerHeight = height;
+            // block的高宽
 
+             
+            for (var i = 0; i < blockList.length; i++) {
+                // 周几
+                blockList[i].resize(
+                    containerWidth
+                );
+            }
         }
     }
 

@@ -19,12 +19,20 @@
             currentDate,
             container,
             blockList = [],
+            containerWidth,
+            containerHeight,
             blockWidth,
             blockHeight,
             headerHeight,
             leftHeaderWidth,
+            verticalCount,
+            header,
+            verticalHeader,
             calendar = calendar;
 
+        // 高度宽度
+        containerWidth = data.width;
+        containerHeight = data.height;
         // 高度
         headerHeight = weekOpt.headerHeight;
         // 左侧宽度
@@ -41,6 +49,8 @@
         that.getCurrent = getCurrent;
         that.getNext = getNext;
         that.getPrev = getPrev;
+        that.resize = resize;
+
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -102,6 +112,7 @@
             // header
             // 周日到周六
             var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            header = $('<div></div>');
             for (var i = 0; i < 7; i++) {
 
                 var head = $('<div>' + headerText[i] + '</div>');
@@ -113,14 +124,16 @@
                     border: 'solid 1px green',
                     left: leftHeaderWidth + blockWidth * i
                 });
-                container.append(head);
+                header.append(head);
             }
+            container.append(header);
         }
 
         function renderVerticalHeader() {
             // header
             // 周日到周六
             var headerText = ['凌晨', '上午', '下午', '晚上'];
+            verticalHeader = $('<div></div>');
             for (var i = 0; i < 4; i++) {
 
                 var head = $('<div>' + headerText[i] + '</div>');
@@ -132,8 +145,9 @@
                     border: 'solid 1px green',
                     left: 0
                 });
-                container.append(head);
+                verticalHeader.append(head);
             }
+            container.append(verticalHeader);
         }
         /**
          * 渲染视图
@@ -152,10 +166,10 @@
             currentMonth = date.getMonth();
 
             // 纵向的数量,分成四块
-            var verticalCount = 4;
+            verticalCount = 4;
             // block的高宽
-            blockWidth = Math.floor(data.width / 7);
-            blockHeight = Math.floor(data.height / verticalCount);
+            blockWidth = Math.floor(containerWidth / 7);
+            blockHeight = Math.floor(containerHeight/ verticalCount);
 
             // 头部
             renderHeader();
@@ -222,6 +236,52 @@
                 };
             })
             calendar.getEventManager().fetch(start, end, defer);
+        }
+
+
+        /**
+         * resize week view.
+         * @param  {Number} width  宽度
+         * @param  {Number} height 高度
+         * @return {void}
+         */
+        function resize(width, height) {
+            containerWidth = width;
+            containerHeight = height;
+            // block的高宽
+            blockWidth = Math.floor(containerWidth / 7);
+            blockHeight = Math.floor(containerHeight / verticalCount);
+
+            // 头部重新定位
+            var heads = header.children();
+            for (var i = 0; i < heads.length; i++) {
+                $(heads[i]).css({
+                    left : leftHeaderWidth + blockWidth * i,
+                    width : blockWidth
+                });
+            };
+
+            // 左侧重新定位
+            var heads = verticalHeader.children();
+            for (var i = 0; i < heads.length; i++) {
+                $(heads[i]).css({
+                    top : headerHeight + blockHeight * i,
+                    height : blockHeight
+                });
+            };
+             
+            for (var i = 0; i < verticalCount; i++) {
+                // 周几
+                for (var j = 0; j < 7; j++) {
+                    var index = i * 7 + j;
+                    blockList[index].resize(
+                        blockWidth, 
+                        blockHeight, 
+                        headerHeight + blockHeight * i,
+                        leftHeaderWidth + blockWidth * j
+                    );
+                }
+            }
         }
 
     }

@@ -204,7 +204,7 @@
             blockWidth = Math.floor(containerWidth / 7);
             blockHeight = Math.floor(containerHeight / weekCount);
 
-            // 头部
+            // 头部重新定位
             var heads = header.children();
             for (var i = 0; i < heads.length; i++) {
                 $(heads[i]).css({

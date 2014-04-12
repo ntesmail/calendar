@@ -34,7 +34,8 @@
             // ondestroy
             onDestroy = settings.onDestroy,
             // event缓存管理
-            eventManager;
+            eventManager,
+            resizeTimeout;
         // 月视图的配置
         var monthOpt = {
             headerHeight: 20
@@ -212,8 +213,14 @@
          * @return {void}
          */
         function resize (width, height) {
+            console.log('resize')
             if(currentView) {
-                currentView.resize(width, height);
+                if(resizeTimeout) {
+                    clearTimeout(resizeTimeout);
+                }
+                resizeTimeout = setTimeout(function() {
+                    currentView.resize(width, height);
+                });
             }
         }
     }
