@@ -2,6 +2,7 @@
 
     fc.WeekView = WeekView;
 
+    var viewName = 'week';
 
     /**
      * 周视图
@@ -47,6 +48,7 @@
         that.show = show;
         that.destroy = destroy;
         that.getCurrent = getCurrent;
+        that.getCurrentMonth = getCurrentMonth;
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
@@ -89,6 +91,14 @@
         }
 
         /**
+         * 获取当前月份
+         * @return {Number} 当前月份
+         */
+        function getCurrentMonth() {
+            return currentMonth;
+        }
+
+        /**
          * 下个星期
          * @return {Date} 下个星期
          */
@@ -108,13 +118,12 @@
             return next;
         }
 
-        function renderHeader() {
+        function renderHeader(start, end) {
             // header
             // 周日到周六
-            var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             header = [];
             for (var i = 0; i < 7; i++) {
-                var head = $('<div class="can can-week">' + headerText[i] + '</div>');
+                var head = $('<div class="can can-week"></div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
@@ -122,14 +131,17 @@
                     left: leftHeaderWidth + blockWidth * i
                 });
                 header.push(head);
+
+                var date = new Date(start);
+                date.setDate(date.getDate() + i);
+                calendar.renderHeader(viewName, head, date);
+
                 container.append(header);
             }
         }
 
         function renderVerticalHeader() {
             // header
-            // 周日到周六
-            var headerText = ['凌晨', '上午', '下午', '晚上'];
             verticalHeader = [];
             var blank = $('<div class="can can-blank"></div>');
             blank.css({
@@ -141,7 +153,7 @@
             container.append(blank);
 
             for (var i = 0; i < 4; i++) {
-                var head = $('<div class="can can-time">' + headerText[i] + '</div>');
+                var head = $('<div class="can can-time"></div>');
                 head.css({
                     width: leftHeaderWidth,
                     height: blockHeight,
@@ -149,6 +161,8 @@
                     left: 0
                 });
                 verticalHeader.push(head);
+
+                calendar.renderVerticalHeader(viewName, head, i);
                 container.append(head);
             }
         }
@@ -175,7 +189,7 @@
             blockHeight = Math.floor(containerHeight/ verticalCount);
 
             // 头部
-            renderHeader();
+            renderHeader(start, end);
             // 左侧
             renderVerticalHeader()
 
@@ -292,7 +306,7 @@
      * 某一天的块
      * @param {[type]} date [description]
      */
-    function WeekTimeBlock(data, settings, weekOpt) {
+    function WeekTimeBlock(data, view) {
         var container,
             width,
             height,
@@ -314,9 +328,10 @@
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
+        that.isCurrentMonth = isCurrentMonth;
         that.resize = resize;
         that.destroy = destroy;
-
+        that.getViewName = getViewName;
         // render
         that.render();
         /**
@@ -327,6 +342,13 @@
             return container;
         }
 
+        /**
+         * 获取view name
+         * @return {stirng} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 获取容器
          * @return {Date} 当前日期对象
@@ -341,10 +363,15 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            container.append(currentDate.getDate());
         }
 
-
+        /**
+         * 是否当月
+         * @return {Boolean} 是否当月
+         */
+        function isCurrentMonth () {
+            return view.getCurrentMonth() === currentDate.getMonth();
+        }
         /**
          * 销毁
          * @return {void}

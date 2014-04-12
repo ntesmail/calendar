@@ -2,7 +2,7 @@
 
     fc.DayView = DayView;
 
-
+    var viewName = 'day';
     /**
      * 日视图
      * @param {Object} data     数据相关的配置
@@ -212,7 +212,7 @@
         that.getDate = getDate;
         that.resize = resize;
         that.destroy = destroy;
-
+        that.getViewName = getViewName;
         // render
         that.render();
 
@@ -232,6 +232,13 @@
             return currentDate;
         }
 
+        /**
+         * 获取view name
+         * @return {stirng} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 生成ui
          * @return {void}

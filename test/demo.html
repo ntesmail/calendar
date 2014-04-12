@@ -39,6 +39,7 @@
         height : height - 100,
         defaultView : 'month'
     },{
+        
         fetchEvents : function (start, end, defer) {
             var events = [];
             for (var i = 0; i < 1000; i++) {
@@ -54,7 +55,29 @@
 
             defer.resolve(start, end, events);
         },
+        onRenderHeader : function(viewName, headBlock, date) {
+            if(viewName === 'week') {
+                headBlock.append(date.getDate() + ', '+ date.getDay());
+            } else {
+                headBlock.append(date.getDay());
+            }
+        },
+        onRenderVerticalHeader : function(viewName, headBlock, index) {
+            if(viewName === 'week') {
+                if(index === 0) {
+                    headBlock.append('凌晨');
+                } else if(index === 1) {
+                    headBlock.append('早上');
+                } else if(index === 2) {
+                    headBlock.append('下午');
+                } else if(index === 3) {
+                    headBlock.append('晚上');
+                }
+            }
+        },
         onRenderEvents : function(timeBlock, showEvents) {
+            // 包括这一天的头
+            timeBlock.getContainer().append('<div>' + timeBlock.getDate().getDate() + '</div>');
             for (var i = 0; i < showEvents.length; i++) {
                 var event = showEvents[i];
 

@@ -2,6 +2,7 @@
 
     fc.MonthView = MonthView;
 
+    var viewName = 'month';
 
     /**
      * 月视图
@@ -45,6 +46,7 @@
         that.show = show;
         that.destroy = destroy;
         that.getCurrent = getCurrent;
+        that.getCurrentMonth = getCurrentMonth;
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
@@ -85,6 +87,13 @@
         }
 
         /**
+         * 当前月份
+         * @return {Number}
+         */
+        function getCurrentMonth() {
+            return currentMonth;
+        }
+        /**
          * 下个月
          * @return {Date} 下个月
          */
@@ -104,13 +113,12 @@
             return next;
         }
 
-        function renderHeader() {
+        function renderHeader(start) {
             // header
             // 周日到周六
-            var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             header = [];
             for (var i = 0; i < 7; i++) {
-                var head = $('<div class="can can-week">' + headerText[i] + '</div>');
+                var head = $('<div class="can can-week"></div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
@@ -118,6 +126,11 @@
                     left: blockWidth * i
                 });
                 header.push(head);
+
+                var date = new Date(start);
+                date.setDate(date.getDate() + i);
+                calendar.renderHeader(viewName, head, date);
+
                 container.append(head);
             }
         }
@@ -146,21 +159,21 @@
             blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部
-            renderHeader();
+            renderHeader(start);
 
             for (var i = 0; i < weekCount; i++) {
                 // 周几
                 for (var j = 0; j < 7; j++) {
                     var dayDate = new Date(start);
                     dayDate.setDate(dayDate.getDate() + i * 7 + j);
-                    var dayData = {
+                    var dayData = {                        
                         width: blockWidth,
                         height: blockHeight,
                         posTop: headerHeight + blockHeight * i,
                         posLeft: blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new MonthDayBlock(dayData);
+                    var dayBlock = new MonthDayBlock(dayData, that);
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
@@ -230,7 +243,7 @@
      * 某一天的块
      * @param {[type]} date [description]
      */
-    function MonthDayBlock(data, settings, monthOpt) {
+    function MonthDayBlock(data, view) {
         var container,
             width,
             height,
@@ -252,8 +265,10 @@
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
+        that.isCurrentMonth = isCurrentMonth;
         that.resize = resize;
         that.destroy = destroy;
+        that.getViewName = getViewName;
 
         // render
         that.render();
@@ -273,6 +288,20 @@
             return currentDate;
         }
 
+        /**
+         * 获取view name
+         * @return {stirng} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
+        /**
+         * 是否当月
+         * @return {Boolean} 是否当月
+         */
+        function isCurrentMonth () {
+            return view.getCurrentMonth() === currentDate.getMonth();
+        }
 
         /**
          * 生成ui
@@ -280,7 +309,6 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            container.append(currentDate.getDate());
         }
 
         /**

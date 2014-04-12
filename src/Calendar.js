@@ -5,9 +5,6 @@
     /**
      * 日历
      * @param {[type]} data     数据
-     *                          {function} events 数据
-     *                                  function(start, end, timezone, defer)
-     *                                      defer.resolve([event list])
      *                          {Number} width
      *                          {Number} height
      *                          {String} defaultView
@@ -15,7 +12,14 @@
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候
-     *
+     *                          {function} fetchEvents
+     *                              function (start, end, defer)  开始时间，结束时间，defer返回
+     *                          {function} onRenderHeader
+     *                              function(viewName, headBlock, date) view名称，block，时间
+     *                          {function} onRenderVerticalHeader
+     *                              function(viewName, headBlock, index) view名称，block，位置
+     *                          {function} onRenderEvents
+     *                              function(timeBlock, showEvents) block 事件
      */
     function Calendar(data, settings) {
         var events,
@@ -31,6 +35,10 @@
             currentFilters = data.filters,
             // renderEvents
             onRenderEvents = settings.onRenderEvents,
+            // render header
+            onRenderHeader = settings.onRenderHeader,
+            // render vertical header
+            onRenderVerticalHeader = settings.onRenderVerticalHeader,
             // ondestroy
             onDestroy = settings.onDestroy,
             // event缓存管理
@@ -71,6 +79,10 @@
         that.resize = resize;
         // render
         that.renderEvents = renderEvents;
+        // render header
+        that.renderHeader = renderHeader;
+        // render vertical header
+        that.renderVerticalHeader = renderVerticalHeader;
         // 销毁
         that.onDestroy = onDestroy;
 
@@ -166,6 +178,13 @@
             }
         }
 
+        function renderHeader(viewName, headBlock, date) {
+            onRenderHeader(viewName, headBlock, date);
+        }
+
+        function renderVerticalHeader(viewName, headBlock, date) {
+            onRenderVerticalHeader(viewName, headBlock, date);
+        }
         /**
          * 生成各个视图
          * @param  {String} viewName [description]
