@@ -279,6 +279,7 @@ var fc = {};
 
     fc.MonthView = MonthView;
 
+    var viewName = 'month';
 
     /**
      * 月视图
@@ -313,7 +314,7 @@ var fc = {};
         // 高度
         headerHeight = monthOpt.headerHeight;
 
-        container = $('<div></div>');
+        container = $('<div class="m-calendar"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -322,6 +323,7 @@ var fc = {};
         that.show = show;
         that.destroy = destroy;
         that.getCurrent = getCurrent;
+        that.getCurrentMonth = getCurrentMonth;
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
@@ -362,6 +364,13 @@ var fc = {};
         }
 
         /**
+         * 当前月份
+         * @return {Number}
+         */
+        function getCurrentMonth() {
+            return currentMonth;
+        }
+        /**
          * 下个月
          * @return {Date} 下个月
          */
@@ -381,24 +390,26 @@ var fc = {};
             return next;
         }
 
-        function renderHeader() {
+        function renderHeader(start) {
             // header
             // 周日到周六
-            var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            header = $('<div></div>');
+            header = [];
             for (var i = 0; i < 7; i++) {
-                var head = $('<div>' + headerText[i] + '</div>');
+                var head = $('<div class="can can-week"></div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
-                    position: 'absolute',
                     top: 0,
-                    border: 'solid 1px green',
                     left: blockWidth * i
                 });
-                header.append(head);
+                header.push(head);
+
+                var date = new Date(start);
+                date.setDate(date.getDate() + i);
+                calendar.renderHeader(viewName, head, date);
+
+                container.append(head);
             }
-            container.append(header);
         }
 
         /**
@@ -425,21 +436,21 @@ var fc = {};
             blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部
-            renderHeader();
+            renderHeader(start);
 
             for (var i = 0; i < weekCount; i++) {
                 // 周几
                 for (var j = 0; j < 7; j++) {
                     var dayDate = new Date(start);
                     dayDate.setDate(dayDate.getDate() + i * 7 + j);
-                    var dayData = {
+                    var dayData = {                        
                         width: blockWidth,
                         height: blockHeight,
                         posTop: headerHeight + blockHeight * i,
                         posLeft: blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new MonthDayBlock(dayData);
+                    var dayBlock = new MonthDayBlock(dayData, that);
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
@@ -482,9 +493,8 @@ var fc = {};
             blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部重新定位
-            var heads = header.children();
-            for (var i = 0; i < heads.length; i++) {
-                $(heads[i]).css({
+            for (var i = 0; i < header.length; i++) {
+                header[i].css({
                     left : blockWidth * i,
                     width : blockWidth
                 });
@@ -510,7 +520,7 @@ var fc = {};
      * 某一天的块
      * @param {[type]} date [description]
      */
-    function MonthDayBlock(data, settings, monthOpt) {
+    function MonthDayBlock(data, view) {
         var container,
             width,
             height,
@@ -519,7 +529,7 @@ var fc = {};
             currentDate;
 
         // 容器的样式
-        container = $('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = $('<div class="can can-day"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -532,8 +542,10 @@ var fc = {};
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
+        that.isCurrentMonth = isCurrentMonth;
         that.resize = resize;
         that.destroy = destroy;
+        that.getViewName = getViewName;
 
         // render
         that.render();
@@ -553,6 +565,20 @@ var fc = {};
             return currentDate;
         }
 
+        /**
+         * 获取view name
+         * @return {stirng} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
+        /**
+         * 是否当月
+         * @return {Boolean} 是否当月
+         */
+        function isCurrentMonth () {
+            return view.getCurrentMonth() === currentDate.getMonth();
+        }
 
         /**
          * 生成ui
@@ -560,7 +586,6 @@ var fc = {};
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            container.append(currentDate.getDate());
         }
 
         /**
@@ -585,7 +610,6 @@ var fc = {};
             posLeft = _left;
             // 重新renderUI
             container.css({
-                position: 'absolute',
                 width: width,
                 height: height,
                 top: posTop,
@@ -599,6 +623,7 @@ var fc = {};
 
     fc.WeekView = WeekView;
 
+    var viewName = 'week';
 
     /**
      * 周视图
@@ -635,7 +660,7 @@ var fc = {};
         // 左侧宽度
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
-        container = $('<div></div>');
+        container = $('<div class="m-calendar"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -644,6 +669,7 @@ var fc = {};
         that.show = show;
         that.destroy = destroy;
         that.getCurrent = getCurrent;
+        that.getCurrentMonth = getCurrentMonth;
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
@@ -686,6 +712,14 @@ var fc = {};
         }
 
         /**
+         * 获取当前月份
+         * @return {Number} 当前月份
+         */
+        function getCurrentMonth() {
+            return currentMonth;
+        }
+
+        /**
          * 下个星期
          * @return {Date} 下个星期
          */
@@ -705,46 +739,53 @@ var fc = {};
             return next;
         }
 
-        function renderHeader() {
+        function renderHeader(start, end) {
             // header
             // 周日到周六
-            var headerText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            header = $('<div></div>');
+            header = [];
             for (var i = 0; i < 7; i++) {
-
-                var head = $('<div>' + headerText[i] + '</div>');
+                var head = $('<div class="can can-week"></div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
-                    position: 'absolute',
                     top: 0,
-                    border: 'solid 1px green',
                     left: leftHeaderWidth + blockWidth * i
                 });
-                header.append(head);
+                header.push(head);
+
+                var date = new Date(start);
+                date.setDate(date.getDate() + i);
+                calendar.renderHeader(viewName, head, date);
+
+                container.append(header);
             }
-            container.append(header);
         }
 
         function renderVerticalHeader() {
             // header
-            // 周日到周六
-            var headerText = ['凌晨', '上午', '下午', '晚上'];
-            verticalHeader = $('<div></div>');
-            for (var i = 0; i < 4; i++) {
+            verticalHeader = [];
+            var blank = $('<div class="can can-blank"></div>');
+            blank.css({
+                top : 0,
+                left : 0,
+                width : leftHeaderWidth,
+                height : headerHeight
+            });
+            container.append(blank);
 
-                var head = $('<div>' + headerText[i] + '</div>');
+            for (var i = 0; i < 4; i++) {
+                var head = $('<div class="can can-time"></div>');
                 head.css({
                     width: leftHeaderWidth,
                     height: blockHeight,
-                    position: 'absolute',
                     top: headerHeight + blockHeight * i,
-                    border: 'solid 1px green',
                     left: 0
                 });
-                verticalHeader.append(head);
+                verticalHeader.push(head);
+
+                calendar.renderVerticalHeader(viewName, head, i);
+                container.append(head);
             }
-            container.append(verticalHeader);
         }
         /**
          * 渲染视图
@@ -769,7 +810,7 @@ var fc = {};
             blockHeight = Math.floor(containerHeight/ verticalCount);
 
             // 头部
-            renderHeader();
+            renderHeader(start, end);
             // 左侧
             renderVerticalHeader()
 
@@ -850,18 +891,16 @@ var fc = {};
             blockHeight = Math.floor(containerHeight / verticalCount);
 
             // 头部重新定位
-            var heads = header.children();
-            for (var i = 0; i < heads.length; i++) {
-                $(heads[i]).css({
+            for (var i = 0; i < header.length; i++) {
+                header[i].css({
                     left : leftHeaderWidth + blockWidth * i,
                     width : blockWidth
                 });
             };
 
             // 左侧重新定位
-            var heads = verticalHeader.children();
-            for (var i = 0; i < heads.length; i++) {
-                $(heads[i]).css({
+            for (var i = 0; i < verticalHeader.length; i++) {
+                verticalHeader[i].css({
                     top : headerHeight + blockHeight * i,
                     height : blockHeight
                 });
@@ -888,7 +927,7 @@ var fc = {};
      * 某一天的块
      * @param {[type]} date [description]
      */
-    function WeekTimeBlock(data, settings, weekOpt) {
+    function WeekTimeBlock(data, view) {
         var container,
             width,
             height,
@@ -897,7 +936,7 @@ var fc = {};
             currentDate;
 
         // 容器的样式
-        container = $('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = $('<div class="can can-day"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -910,9 +949,10 @@ var fc = {};
         that.getContainer = getContainer;
         that.render = render;
         that.getDate = getDate;
+        that.isCurrentMonth = isCurrentMonth;
         that.resize = resize;
         that.destroy = destroy;
-
+        that.getViewName = getViewName;
         // render
         that.render();
         /**
@@ -923,6 +963,13 @@ var fc = {};
             return container;
         }
 
+        /**
+         * 获取view name
+         * @return {stirng} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 获取容器
          * @return {Date} 当前日期对象
@@ -937,10 +984,15 @@ var fc = {};
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            container.append(currentDate.getDate());
         }
 
-
+        /**
+         * 是否当月
+         * @return {Boolean} 是否当月
+         */
+        function isCurrentMonth () {
+            return view.getCurrentMonth() === currentDate.getMonth();
+        }
         /**
          * 销毁
          * @return {void}
@@ -963,7 +1015,6 @@ var fc = {};
             posLeft = _left;
             // 重新renderUI
             container.css({
-                position: 'absolute',
                 width: width,
                 height: height,
                 top: posTop,
@@ -988,7 +1039,7 @@ var fc = {};
 
     fc.DayView = DayView;
 
-
+    var viewName = 'day';
     /**
      * 日视图
      * @param {Object} data     数据相关的配置
@@ -1018,7 +1069,7 @@ var fc = {};
         // 左侧宽度
         leftHeaderWidth = dayOpt.leftHeaderWidth;
 
-        container = new $('<div></div>');
+        container = new $('<div class="m-calendar"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -1186,7 +1237,7 @@ var fc = {};
             currentDate;
 
         // 容器的样式
-        container = new $('<div style="overflow:hidden;border:1px solid black;"></div>');
+        container = new $('<div></div>');
         width = data.width;
         // 当前时间
         currentDate = data.date;
@@ -1198,7 +1249,7 @@ var fc = {};
         that.getDate = getDate;
         that.resize = resize;
         that.destroy = destroy;
-
+        that.getViewName = getViewName;
         // render
         that.render();
 
@@ -1218,6 +1269,13 @@ var fc = {};
             return currentDate;
         }
 
+        /**
+         * 获取view name
+         * @return {stirng} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 生成ui
          * @return {void}
@@ -1254,13 +1312,10 @@ var fc = {};
 (function() {
 
     fc.Calendar = Calendar;
-    var calendarContainerTmpl = '<div></div>';
+
     /**
      * 日历
      * @param {[type]} data     数据
-     *                          {function} events 数据
-     *                                  function(start, end, timezone, defer)
-     *                                      defer.resolve([event list])
      *                          {Number} width
      *                          {Number} height
      *                          {String} defaultView
@@ -1268,12 +1323,19 @@ var fc = {};
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候
-     *
+     *                          {function} fetchEvents
+     *                              function (start, end, defer)  开始时间，结束时间，defer返回
+     *                          {function} onRenderHeader
+     *                              function(viewName, headBlock, date) view名称，block，时间
+     *                          {function} onRenderVerticalHeader
+     *                              function(viewName, headBlock, index) view名称，block，位置
+     *                          {function} onRenderEvents
+     *                              function(timeBlock, showEvents) block 事件
      */
     function Calendar(data, settings) {
         var events,
             // 容器，shark.Container
-            container = $(calendarContainerTmpl),
+            container = $('<div class="js-calendar-container"></div>'),
             // 名称 month,week,day
             defaultView = data.defaultView || 'month',
             // 当前视图
@@ -1284,6 +1346,10 @@ var fc = {};
             currentFilters = data.filters,
             // renderEvents
             onRenderEvents = settings.onRenderEvents,
+            // render header
+            onRenderHeader = settings.onRenderHeader,
+            // render vertical header
+            onRenderVerticalHeader = settings.onRenderVerticalHeader,
             // ondestroy
             onDestroy = settings.onDestroy,
             // event缓存管理
@@ -1324,6 +1390,10 @@ var fc = {};
         that.resize = resize;
         // render
         that.renderEvents = renderEvents;
+        // render header
+        that.renderHeader = renderHeader;
+        // render vertical header
+        that.renderVerticalHeader = renderVerticalHeader;
         // 销毁
         that.onDestroy = onDestroy;
 
@@ -1419,6 +1489,13 @@ var fc = {};
             }
         }
 
+        function renderHeader(viewName, headBlock, date) {
+            onRenderHeader(viewName, headBlock, date);
+        }
+
+        function renderVerticalHeader(viewName, headBlock, date) {
+            onRenderVerticalHeader(viewName, headBlock, date);
+        }
         /**
          * 生成各个视图
          * @param  {String} viewName [description]
@@ -1474,7 +1551,6 @@ var fc = {};
                     clearTimeout(resizeTimeout);
                 }
                 resizeTimeout = setTimeout(function() {
-                    console.log('resize');
                     currentView.resize(width, height);
                 }, 200);
             }

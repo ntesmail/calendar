@@ -240,7 +240,6 @@
                     clearTimeout(resizeTimeout);
                 }
                 resizeTimeout = setTimeout(function() {
-                    console.log('resize');
                     currentView.resize(width, height);
                 }, 200);
             }
