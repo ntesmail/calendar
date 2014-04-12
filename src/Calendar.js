@@ -213,14 +213,17 @@
          * @return {void}
          */
         function resize (width, height) {
-            console.log('resize')
+            // 重新设置宽高
+            data.width = width;
+            data.height = height;
             if(currentView) {
                 if(resizeTimeout) {
                     clearTimeout(resizeTimeout);
                 }
                 resizeTimeout = setTimeout(function() {
+                    console.log('resize');
                     currentView.resize(width, height);
-                });
+                }, 200);
             }
         }
     }

@@ -14,9 +14,16 @@ module.exports = function(grunt) {
             // Play attention for order of inheritance
             young: {
                 src: [
-                    "src/msgbox.js",
-                    "src/preview.js",
-                    "src/pageman.js",
+                    "test/deploy/begin.js",
+                    "src/main.js",
+                    "src/util.js",
+                    "src/Event.js",
+                    "src/EventManager.js",
+                    "src/view/MonthView.js",
+                    "src/view/WeekView.js",
+                    "src/view/DayView.js",
+                    "src/Calendar.js",
+                    "test/deploy/end.js"
                 ],
                 single_files: [
                 ],
@@ -26,7 +33,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        sharkjs_dev: {
+        calendar_dev: {
             dev: {
                 src: ['src/**.js', 'style/img/**', 'style/css/**'],
                 dest: {
@@ -183,9 +190,9 @@ module.exports = function(grunt) {
             }
         });
     });
-    grunt.registerMultiTask('sharkjs_dev', 'My "dist" task description.', function(_arg1, _arg2) {
+    grunt.registerMultiTask('calendar_dev', 'My "dist" task description.', function(_arg1, _arg2) {
         // console.log(_arg1);return;
-        grunt.log.writeln('Currently running the "sharkjs_dev" task.');
+        grunt.log.writeln('Currently running the "calendar_dev" task.');
         // Merge task-specific and/or target-specific options with these defaults.
 
         // Iterate over all src-dest file pairs.

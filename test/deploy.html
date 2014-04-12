@@ -21,20 +21,13 @@
     <script type="text/javascript" src="../lib/jquery.jqote2.js"></script>
     <script type="text/javascript" src="../lib/sharkjs-0.0.1.js"></script>
 
-    <script type="text/javascript" src="../src/main.js"></script>
-    <script type="text/javascript" src="../src/util.js"></script>
-    <script type="text/javascript" src="../src/Event.js"></script>
-    <script type="text/javascript" src="../src/EventManager.js"></script>
-    <script type="text/javascript" src="../src/view/MonthView.js"></script>
-    <script type="text/javascript" src="../src/view/WeekView.js"></script>
-    <script type="text/javascript" src="../src/view/DayView.js"></script>
-    <script type="text/javascript" src="../src/Calendar.js"></script>
-    
+    <script type="text/javascript" src="../dist/calendar-0.0.1.js"></script>
+
     <script type="text/javascript">
     var body = $('#calendarContainer');
     var width = body.width();
     var height = body.height();
-    var cal = new fc.Calendar({
+    var cal = new shark.FullCalendar({
         width : width - 100,
         height : height - 100,
         defaultView : 'month'
