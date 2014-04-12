@@ -1,14 +1,10 @@
 /**
 * @name		young_calendar
 * @author:  Cc
-* @date:    2014-04
+* @date:    2014-04-12
 ==================================== */
 
-/* mixin、placeholder
-------------------- */
-@import "value";
-
-
-/* calendar
-------------------- */
-.dd{@extend %inline-block;}
+.m-calendarMn{position: relative;*zoom: 1;}
+.m-calendarMn .can{position: absolute;background-color: #fff;border: 1px solid;}
+.m-calendarMn .can-blank{line-height: 0;font-size: 0;}
+.m-calendarMn .can-time{border-top-color: #fff}
