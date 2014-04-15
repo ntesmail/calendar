@@ -39,7 +39,7 @@
         // 左侧宽度
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
-        container = $('<div class="m-calendar"></div>');
+        container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -315,7 +315,7 @@
             currentDate;
 
         // 容器的样式
-        container = $('<div class="can can-day"></div>');
+        container = $('<div class="can can-block"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;

@@ -32,7 +32,7 @@
         // 左侧宽度
         leftHeaderWidth = dayOpt.leftHeaderWidth;
 
-        container = new $('<div class="m-calendar"></div>');
+        container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -157,6 +157,11 @@
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
                             // 加到页面中
+                            var time = 
+                                '<div class="can can-time">' +
+                                    '<span class="w-time">' + currentDate.getHours() + ':' + currentDate.getMinutes() + '</span>' +
+                                '</div>';
+                            container.append(time);
                             container.append(block.getContainer());
                         }
                     };
@@ -176,7 +181,6 @@
             containerHeight = height;
             // block的高宽
 
-             
             for (var i = 0; i < blockList.length; i++) {
                 // 周几
                 blockList[i].resize(
@@ -200,7 +204,7 @@
             currentDate;
 
         // 容器的样式
-        container = new $('<div></div>');
+        container = new $('<div class="can can-block"></div>');
         width = data.width;
         // 当前时间
         currentDate = data.date;
@@ -245,7 +249,7 @@
          */
         function render() {
             resize(data.width);
-            container.append(currentDate.getHours() + ':' + currentDate.getMinutes());
+            
         }
 
         /**

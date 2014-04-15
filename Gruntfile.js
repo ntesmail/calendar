@@ -81,7 +81,7 @@ module.exports = function(grunt) {
             },
             young: {
                 files: [{
-                    src: "style/css/style.css",
+                    src: "style/css/calendar.css",
                     dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.min.css'
                 }]
             }
@@ -90,7 +90,7 @@ module.exports = function(grunt) {
         copy: {
             young: {
                 files: [{
-                    src: "style/css/style.css",
+                    src: "style/css/calendar.css",
                     dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.min.css'
                 }]
             }
@@ -116,7 +116,6 @@ module.exports = function(grunt) {
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-compress');
@@ -212,7 +211,7 @@ module.exports = function(grunt) {
 
     });
     grunt.registerTask('deploy_js', ['calendar_concat:young', 'uglify:young']);
-    grunt.registerTask('deploy_css', ['copy:young', 'replace_mimg_url:young']);
+    grunt.registerTask('deploy_css', ['copy:young']);
     grunt.registerMultiTask('replace_mimg_url', 'deal relative path', function(_arg1, _arg2) {
         var options = this.options({
             separator: grunt.util.linefeed,
