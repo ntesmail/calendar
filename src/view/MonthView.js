@@ -151,12 +151,12 @@
             // 当前月
             currentMonth = date.getMonth();
 
-            // 周数
             var endDate = fc.util.clearTime(end);
-            weekCount = (endDate - start) / (7 * 24 * 60 * 60 * 1000);
+            // 周数
+            weekCount = Math.ceil((endDate - start) / (7 * 24 * 60 * 60 * 1000));
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight / weekCount);
+            // blockWidth = Math.floor(containerWidth / 7);
+            // blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部
             renderHeader(start);
@@ -166,11 +166,11 @@
                 for (var j = 0; j < 7; j++) {
                     var dayDate = new Date(start);
                     dayDate.setDate(dayDate.getDate() + i * 7 + j);
-                    var dayData = {                        
-                        width: blockWidth,
-                        height: blockHeight,
-                        posTop: headerHeight + blockHeight * i,
-                        posLeft: blockWidth * j,
+                    var dayData = {
+                        // width: blockWidth,
+                        // height: blockHeight,
+                        // posTop: headerHeight + blockHeight * i,
+                        // posLeft: blockWidth * j,
                         date: dayDate
                     };
                     var dayBlock = new MonthDayBlock(dayData, that);
@@ -185,6 +185,8 @@
                     blockList.push(dayBlock);
                 }
             }
+
+            resize(containerWidth, containerHeight)
 
             // 统一添加日历事件
             // 获取的
@@ -214,6 +216,15 @@
             // block的高宽
             blockWidth = Math.floor(containerWidth / 7);
             blockHeight = Math.floor(containerHeight / weekCount);
+
+            // 重新计算高宽，处理掉小数的影响
+            containerWidth = blockWidth * 7;
+            containerHeight = blockHeight * weekCount;
+
+            container.css({
+                width : containerWidth,
+                height : containerHeight + headerHeight
+            });
 
             // 头部重新定位
             for (var i = 0; i < header.length; i++) {

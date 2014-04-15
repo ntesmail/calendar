@@ -1,4 +1,4 @@
-/*! calendar - v0.0.1 - 2014-04-12
+/*! calendar - v0.0.1 - 2014-04-15
 * https://github.com/ntesmail/calendar
 * Copyright (c) 2014 ; Licensed  */
 (function () {
@@ -314,7 +314,7 @@ var fc = {};
         // 高度
         headerHeight = monthOpt.headerHeight;
 
-        container = $('<div class="m-calendar"></div>');
+        container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -428,12 +428,12 @@ var fc = {};
             // 当前月
             currentMonth = date.getMonth();
 
-            // 周数
             var endDate = fc.util.clearTime(end);
-            weekCount = (endDate - start) / (7 * 24 * 60 * 60 * 1000);
+            // 周数
+            weekCount = Math.ceil((endDate - start) / (7 * 24 * 60 * 60 * 1000));
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight / weekCount);
+            // blockWidth = Math.floor(containerWidth / 7);
+            // blockHeight = Math.floor(containerHeight / weekCount);
 
             // 头部
             renderHeader(start);
@@ -443,11 +443,11 @@ var fc = {};
                 for (var j = 0; j < 7; j++) {
                     var dayDate = new Date(start);
                     dayDate.setDate(dayDate.getDate() + i * 7 + j);
-                    var dayData = {                        
-                        width: blockWidth,
-                        height: blockHeight,
-                        posTop: headerHeight + blockHeight * i,
-                        posLeft: blockWidth * j,
+                    var dayData = {
+                        // width: blockWidth,
+                        // height: blockHeight,
+                        // posTop: headerHeight + blockHeight * i,
+                        // posLeft: blockWidth * j,
                         date: dayDate
                     };
                     var dayBlock = new MonthDayBlock(dayData, that);
@@ -462,6 +462,8 @@ var fc = {};
                     blockList.push(dayBlock);
                 }
             }
+
+            resize(containerWidth, containerHeight)
 
             // 统一添加日历事件
             // 获取的
@@ -491,6 +493,15 @@ var fc = {};
             // block的高宽
             blockWidth = Math.floor(containerWidth / 7);
             blockHeight = Math.floor(containerHeight / weekCount);
+
+            // 重新计算高宽，处理掉小数的影响
+            containerWidth = blockWidth * 7;
+            containerHeight = blockHeight * weekCount;
+
+            container.css({
+                width : containerWidth,
+                height : containerHeight + headerHeight
+            });
 
             // 头部重新定位
             for (var i = 0; i < header.length; i++) {
@@ -529,7 +540,7 @@ var fc = {};
             currentDate;
 
         // 容器的样式
-        container = $('<div class="can can-day"></div>');
+        container = $('<div class="can can-block"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -660,7 +671,7 @@ var fc = {};
         // 左侧宽度
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
-        container = $('<div class="m-calendar"></div>');
+        container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -806,8 +817,8 @@ var fc = {};
             // 纵向的数量,分成四块
             verticalCount = 4;
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight/ verticalCount);
+            // blockWidth = Math.floor(containerWidth / 7);
+            // blockHeight = Math.floor(containerHeight/ verticalCount);
 
             // 头部
             renderHeader(start, end);
@@ -821,10 +832,10 @@ var fc = {};
                     dayDate.setDate(dayDate.getDate() + j);
                     dayDate.setHours(i * (24 / verticalCount));
                     var dayData = {
-                        width: blockWidth,
-                        height: blockHeight,
-                        posTop: headerHeight + blockHeight * i,
-                        posLeft: leftHeaderWidth + blockWidth * j,
+                        // width: blockWidth,
+                        // height: blockHeight,
+                        // posTop: headerHeight + blockHeight * i,
+                        // posLeft: leftHeaderWidth + blockWidth * j,
                         date: dayDate
                     };
                     var dayBlock = new WeekTimeBlock(dayData);
@@ -839,6 +850,8 @@ var fc = {};
                     blockList.push(dayBlock);
                 }
             }
+
+            resize(containerWidth, containerHeight);
 
             // 统一添加日历事件
             // 获取的
@@ -886,10 +899,19 @@ var fc = {};
         function resize(width, height) {
             containerWidth = width;
             containerHeight = height;
+
             // block的高宽
             blockWidth = Math.floor(containerWidth / 7);
             blockHeight = Math.floor(containerHeight / verticalCount);
 
+            // 重新计算高宽，处理掉小数的影响
+            containerWidth = blockWidth * 7;
+            containerHeight = blockHeight * verticalCount;
+
+            container.css({
+                width : containerWidth + leftHeaderWidth,
+                height : containerHeight + headerHeight
+            });
             // 头部重新定位
             for (var i = 0; i < header.length; i++) {
                 header[i].css({
@@ -936,7 +958,7 @@ var fc = {};
             currentDate;
 
         // 容器的样式
-        container = $('<div class="can can-day"></div>');
+        container = $('<div class="can can-block"></div>');
         width = data.width;
         height = data.height;
         posTop = data.posTop;
@@ -1069,7 +1091,7 @@ var fc = {};
         // 左侧宽度
         leftHeaderWidth = dayOpt.leftHeaderWidth;
 
-        container = new $('<div class="m-calendar"></div>');
+        container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
         var that = this;
         that.getContainer = getContainer;
@@ -1155,7 +1177,7 @@ var fc = {};
             // 纵向的数量,分成四块
             var verticalCount = 4;
             // block的高宽
-            blockWidth = data.width;
+            // blockWidth = data.width;
 
             var defer = $.Deferred();
             defer.done(function(events) {
@@ -1185,7 +1207,7 @@ var fc = {};
                         if(showEvents.length > 0) {
                             // 事件时间
                             var dayData = {
-                                width: blockWidth,
+                                // width: blockWidth,
                                 date: showEvents[0].getStart()
                             };
                             // 这个block是否显示跟里面的events数量相关
@@ -1194,9 +1216,16 @@ var fc = {};
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
                             // 加到页面中
+                            var time = 
+                                $('<div class="can can-time">' +
+                                    '<span class="w-time">' + currentDate.getHours() + ':' + currentDate.getMinutes() + '</span>' +
+                                '</div>');
+                            container.append(time);
                             container.append(block.getContainer());
                         }
                     };
+
+                    resize(containerWidth, containerHeight);
                 }
             });
             calendar.getEventManager().fetch(start, end, defer);
@@ -1212,12 +1241,13 @@ var fc = {};
             containerWidth = width;
             containerHeight = height;
             // block的高宽
-
-             
+            container.css({
+                width : containerWidth
+            });
             for (var i = 0; i < blockList.length; i++) {
                 // 周几
                 blockList[i].resize(
-                    containerWidth
+                    containerWidth - leftHeaderWidth - 1
                 );
             }
         }
@@ -1237,7 +1267,7 @@ var fc = {};
             currentDate;
 
         // 容器的样式
-        container = new $('<div></div>');
+        container = new $('<div class="can can-block"></div>');
         width = data.width;
         // 当前时间
         currentDate = data.date;
@@ -1282,7 +1312,7 @@ var fc = {};
          */
         function render() {
             resize(data.width);
-            container.append(currentDate.getHours() + ':' + currentDate.getMinutes());
+            
         }
 
         /**
@@ -1363,14 +1393,27 @@ var fc = {};
         var weekOpt = {
             headerHeight: 20,
             // 左侧宽度
-            leftHeaderWidth: 40
+            leftHeaderWidth: 100
         };
         // 日视图的配置
         var dayOpt = {
             headerHeight: 20,
             // 左侧宽度
-            leftHeaderWidth: 40
+            leftHeaderWidth: 100
         };
+
+        // 月视图配置
+        if(typeof data.monthOpt === 'object') {
+            monthOpt = $.extend(monthOpt, data.monthOpt);
+        }
+        // 周视图配置
+        if(typeof data.weekOpt === 'object') {
+            weekOpt = $.extend(weekOpt, data.weekOpt);
+        }
+        // 日视图配置
+        if(typeof data.dayOpt === 'object') {
+            dayOpt = $.extend(dayOpt, data.dayOpt);
+        }
 
         // 加上clsName
         if(typeof data.clsName === 'string') {

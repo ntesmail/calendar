@@ -118,7 +118,7 @@
             // 纵向的数量,分成四块
             var verticalCount = 4;
             // block的高宽
-            blockWidth = data.width;
+            // blockWidth = data.width;
 
             var defer = $.Deferred();
             defer.done(function(events) {
@@ -148,7 +148,7 @@
                         if(showEvents.length > 0) {
                             // 事件时间
                             var dayData = {
-                                width: blockWidth,
+                                // width: blockWidth,
                                 date: showEvents[0].getStart()
                             };
                             // 这个block是否显示跟里面的events数量相关
@@ -158,13 +158,15 @@
                             calendar.renderEvents(block, showEvents, false);
                             // 加到页面中
                             var time = 
-                                '<div class="can can-time">' +
+                                $('<div class="can can-time">' +
                                     '<span class="w-time">' + currentDate.getHours() + ':' + currentDate.getMinutes() + '</span>' +
-                                '</div>';
+                                '</div>');
                             container.append(time);
                             container.append(block.getContainer());
                         }
                     };
+
+                    resize(containerWidth, containerHeight);
                 }
             });
             calendar.getEventManager().fetch(start, end, defer);
@@ -180,11 +182,13 @@
             containerWidth = width;
             containerHeight = height;
             // block的高宽
-
+            container.css({
+                width : containerWidth
+            });
             for (var i = 0; i < blockList.length; i++) {
                 // 周几
                 blockList[i].resize(
-                    containerWidth
+                    containerWidth - leftHeaderWidth - 1
                 );
             }
         }

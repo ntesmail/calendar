@@ -185,8 +185,8 @@
             // 纵向的数量,分成四块
             verticalCount = 4;
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight/ verticalCount);
+            // blockWidth = Math.floor(containerWidth / 7);
+            // blockHeight = Math.floor(containerHeight/ verticalCount);
 
             // 头部
             renderHeader(start, end);
@@ -200,10 +200,10 @@
                     dayDate.setDate(dayDate.getDate() + j);
                     dayDate.setHours(i * (24 / verticalCount));
                     var dayData = {
-                        width: blockWidth,
-                        height: blockHeight,
-                        posTop: headerHeight + blockHeight * i,
-                        posLeft: leftHeaderWidth + blockWidth * j,
+                        // width: blockWidth,
+                        // height: blockHeight,
+                        // posTop: headerHeight + blockHeight * i,
+                        // posLeft: leftHeaderWidth + blockWidth * j,
                         date: dayDate
                     };
                     var dayBlock = new WeekTimeBlock(dayData);
@@ -218,6 +218,8 @@
                     blockList.push(dayBlock);
                 }
             }
+
+            resize(containerWidth, containerHeight);
 
             // 统一添加日历事件
             // 获取的
@@ -265,10 +267,19 @@
         function resize(width, height) {
             containerWidth = width;
             containerHeight = height;
+
             // block的高宽
             blockWidth = Math.floor(containerWidth / 7);
             blockHeight = Math.floor(containerHeight / verticalCount);
 
+            // 重新计算高宽，处理掉小数的影响
+            containerWidth = blockWidth * 7;
+            containerHeight = blockHeight * verticalCount;
+
+            container.css({
+                width : containerWidth + leftHeaderWidth,
+                height : containerHeight + headerHeight
+            });
             // 头部重新定位
             for (var i = 0; i < header.length; i++) {
                 header[i].css({

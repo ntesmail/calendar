@@ -52,14 +52,27 @@
         var weekOpt = {
             headerHeight: 20,
             // 左侧宽度
-            leftHeaderWidth: 40
+            leftHeaderWidth: 100
         };
         // 日视图的配置
         var dayOpt = {
             headerHeight: 20,
             // 左侧宽度
-            leftHeaderWidth: 40
+            leftHeaderWidth: 100
         };
+
+        // 月视图配置
+        if(typeof data.monthOpt === 'object') {
+            monthOpt = $.extend(monthOpt, data.monthOpt);
+        }
+        // 周视图配置
+        if(typeof data.weekOpt === 'object') {
+            weekOpt = $.extend(weekOpt, data.weekOpt);
+        }
+        // 日视图配置
+        if(typeof data.dayOpt === 'object') {
+            dayOpt = $.extend(dayOpt, data.dayOpt);
+        }
 
         // 加上clsName
         if(typeof data.clsName === 'string') {

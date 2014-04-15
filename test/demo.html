@@ -37,7 +37,10 @@
     var cal = new fc.Calendar({
         width : width - 100,
         height : height - 100,
-        defaultView : 'month'
+        defaultView : 'month',
+        dayOpt : {
+            leftHeaderWidth : 55
+        }
     },{
         
         fetchEvents : function (start, end, defer) {
