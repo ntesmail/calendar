@@ -206,7 +206,7 @@
                         // posLeft: leftHeaderWidth + blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new WeekTimeBlock(dayData);
+                    var dayBlock = new WeekTimeBlock(dayData, that);
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
@@ -374,6 +374,9 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
+            if(isCurrentMonth() && currentDate.getDate() === new Date().getDate()) {
+                container.addClass('can-crt');
+            }
         }
 
         /**

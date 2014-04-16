@@ -320,6 +320,9 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
+            if(isCurrentMonth() && currentDate.getDate() === new Date().getDate()) {
+                container.addClass('can-crt');
+            }
         }
 
         /**

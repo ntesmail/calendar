@@ -152,7 +152,7 @@
                                 date: showEvents[0].getStart()
                             };
                             // 这个block是否显示跟里面的events数量相关
-                            var block = new DayTimeBlock(dayData);
+                            var block = new DayTimeBlock(dayData, that);
                             blockList.push(block);
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
@@ -221,6 +221,7 @@
         that.resize = resize;
         that.destroy = destroy;
         that.getViewName = getViewName;
+        that.isCurrentMonth = isCurrentMonth;
         // render
         that.render();
 
@@ -247,6 +248,15 @@
         function getViewName () {
             return viewName;
         }
+
+        /**
+         * 是否当前月
+         * @return {Boolean} yes
+         */
+        function isCurrentMonth () {
+            return true;
+        }
+
         /**
          * 生成ui
          * @return {void}

@@ -597,6 +597,9 @@ var fc = {};
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
+            if(isCurrentMonth() && currentDate.getDate() === new Date().getDate()) {
+                container.addClass('can-crt');
+            }
         }
 
         /**
@@ -838,7 +841,7 @@ var fc = {};
                         // posLeft: leftHeaderWidth + blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new WeekTimeBlock(dayData);
+                    var dayBlock = new WeekTimeBlock(dayData, that);
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
@@ -1006,6 +1009,9 @@ var fc = {};
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
+            if(isCurrentMonth() && currentDate.getDate() === new Date().getDate()) {
+                container.addClass('can-crt');
+            }
         }
 
         /**
@@ -1211,7 +1217,7 @@ var fc = {};
                                 date: showEvents[0].getStart()
                             };
                             // 这个block是否显示跟里面的events数量相关
-                            var block = new DayTimeBlock(dayData);
+                            var block = new DayTimeBlock(dayData, that);
                             blockList.push(block);
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
@@ -1280,6 +1286,7 @@ var fc = {};
         that.resize = resize;
         that.destroy = destroy;
         that.getViewName = getViewName;
+        that.isCurrentMonth = isCurrentMonth;
         // render
         that.render();
 
@@ -1306,6 +1313,15 @@ var fc = {};
         function getViewName () {
             return viewName;
         }
+
+        /**
+         * 是否当前月
+         * @return {Boolean} yes
+         */
+        function isCurrentMonth () {
+            return true;
+        }
+
         /**
          * 生成ui
          * @return {void}
