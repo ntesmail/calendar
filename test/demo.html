@@ -34,10 +34,13 @@
     var body = $('#calendarContainer');
     var width = body.width();
     var height = body.height();
+    var date = new Date();
+    date.setDate(date.getDate() + 1);
     var cal = new fc.Calendar({
         width : width - 100,
         height : height - 100,
-        defaultView : 'month',
+        defaultView : 'day',
+        date : date,
         dayOpt : {
             leftHeaderWidth : 55
         }

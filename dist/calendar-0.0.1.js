@@ -1,4 +1,4 @@
-/*! calendar - v0.0.1 - 2014-04-15
+/*! calendar - v0.0.1 - 2014-04-16
 * https://github.com/ntesmail/calendar
 * Copyright (c) 2014 ; Licensed  */
 (function () {
@@ -1350,6 +1350,7 @@ var fc = {};
      *                          {Number} height
      *                          {String} defaultView
      *                          {String} clsName
+     *                          {long, Date} date
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候
@@ -1370,6 +1371,8 @@ var fc = {};
             defaultView = data.defaultView || 'month',
             // 当前视图
             currentViewName,
+            // 当前时间
+            currentDate,
             // 当前视图对象
             currentView,
             // 当前filters
@@ -1420,6 +1423,10 @@ var fc = {};
             container.addClass(data.clsName)
         }
 
+        if(typeof data.date !== 'undefined') {
+            currentDate = new Date(data.date);
+        }
+
         var that = this;
         // public
         that.render = render;
@@ -1452,7 +1459,7 @@ var fc = {};
             });
             // 初始化
             // 默认view
-            renderView(defaultView);
+            renderView(defaultView, currentDate);
         }
 
         function getEventManager() {
@@ -1550,7 +1557,7 @@ var fc = {};
             // render
             if (!day) {
                 // 当天时间
-                day = new Date();
+                day = currentDate || new Date();
             }
 
             if (currentView) {

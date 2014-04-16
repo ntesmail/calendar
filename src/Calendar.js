@@ -9,6 +9,7 @@
      *                          {Number} height
      *                          {String} defaultView
      *                          {String} clsName
+     *                          {long, Date} date
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候
@@ -29,6 +30,8 @@
             defaultView = data.defaultView || 'month',
             // 当前视图
             currentViewName,
+            // 当前时间
+            currentDate,
             // 当前视图对象
             currentView,
             // 当前filters
@@ -79,6 +82,10 @@
             container.addClass(data.clsName)
         }
 
+        if(typeof data.date !== 'undefined') {
+            currentDate = new Date(data.date);
+        }
+
         var that = this;
         // public
         that.render = render;
@@ -111,7 +118,7 @@
             });
             // 初始化
             // 默认view
-            renderView(defaultView);
+            renderView(defaultView, currentDate);
         }
 
         function getEventManager() {
@@ -209,7 +216,7 @@
             // render
             if (!day) {
                 // 当天时间
-                day = new Date();
+                day = currentDate || new Date();
             }
 
             if (currentView) {
