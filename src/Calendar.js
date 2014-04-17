@@ -32,6 +32,8 @@
      *                              function(viewName, headBlock, index) view名称，block，位置
      *                          {function} onRenderEvents
      *                              function(timeBlock, showEvents) block 事件
+     *                          {function} onViewChanged
+     *                              function(view) 视图切换了
      */
     function Calendar(data, settings) {
         var events,
@@ -51,6 +53,8 @@
             onRenderEvents = settings.onRenderEvents,
             // render header
             onRenderHeader = settings.onRenderHeader,
+            // change view
+            onViewChanged = settings.onViewChanged,
             // render vertical header
             onRenderVerticalHeader = settings.onRenderVerticalHeader,
             // ondestroy
@@ -104,6 +108,7 @@
         that.getEventManager = getEventManager;
         that.prev = prev;
         that.next = next;
+        that.goDate = goDate;
         that.changeView = changeView;
         that.changeFilters = changeFilters;
         that.getFilters = getFilters;
@@ -160,6 +165,16 @@
             // 新视图
             renderView(currentViewName, day);
             return day;
+        }
+
+        /**
+         * 跳到某一天
+         * @param  {string} viewName 视图名称
+         * @param  {Date} day 跳到某天
+         * @return {void}
+         */
+        function goDate(viewName, day) {
+             renderView(viewName, day);
         }
 
         /**
@@ -231,7 +246,7 @@
                 // 当天时间
                 day = currentDate || new Date();
             }
-
+            var viewChanged = typeof currentView !== 'undefined';
             if (currentView) {
                 currentView.destroy();
                 currentView = null;
@@ -256,6 +271,11 @@
             container.append(currentView.getContainer());
             // 显示
             currentView.show();
+
+            // 切换了
+            if(viewChanged && typeof onViewChanged === 'function') {
+                onViewChanged(currentView);
+            }
         }
 
         /**
