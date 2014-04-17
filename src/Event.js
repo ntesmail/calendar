@@ -8,7 +8,7 @@
      * @param {[type]} settings [description]
      */
     function Event(data, settings) {
-        var id, title, start, type, end, repeate;
+        var id, title, start, color, type, end, repeate;
         id = data.id;
         title = data.title;
         start = data.start;
