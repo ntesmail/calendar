@@ -36,7 +36,7 @@
         function getRepeate() {
             return repeate;
         }
-        
+
         function getStart() {
             return start;
         }

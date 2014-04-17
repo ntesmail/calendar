@@ -142,22 +142,24 @@
 
         /**
          * 下一个
-         * @return {void}
+         * @return {Date} 下一个
          */
         function next() {
             var day = currentView.getNext();
             // 新视图
             renderView(currentViewName, day);
+            return day;
         }
 
         /**
          * 前一个
-         * @return {void}
+         * @return {Date} 前一个
          */
         function prev() {
             var day = currentView.getPrev();
             // 新视图
             renderView(currentViewName, day);
+            return day;
         }
 
         /**
