@@ -1193,10 +1193,12 @@ var fc = {};
                             blockList.push(block);
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
+                            var min = dayData.date.getMinutes();
+                            var showTime = dayData.date.getHours() + ':' + (min >= 10 ? min : '0' + min);
                             // 加到页面中
                             var time = 
                                 $('<div class="can can-time">' +
-                                    '<span class="w-time">' + currentDate.getHours() + ':' + currentDate.getMinutes() + '</span>' +
+                                    '<span class="w-time">' + showTime + '</span>' +
                                 '</div>');
                             container.append(time);
                             container.append(block.getContainer());
