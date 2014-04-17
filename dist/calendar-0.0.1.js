@@ -1,4 +1,4 @@
-/*! calendar - v0.0.1 - 2014-04-16
+/*! calendar - v0.0.1 - 2014-04-17
 * https://github.com/ntesmail/calendar
 * Copyright (c) 2014 ; Licensed  */
 (function () {
@@ -171,22 +171,35 @@ var fc = {};
      * @param {[type]} settings [description]
      */
     function Event(data, settings) {
-        var title, start, type, end, repeate;
-
+        var id, title, start, type, end, repeate;
+        id = data.id;
         title = data.title;
         start = data.start;
+        type = data.type;
+        end = data.end;
+        repeate = data.repeate;
+        color = data.color;
 
         var that = this;
+        that.getId = getId;
         that.getTitle = getTitle;
         that.getStart = getStart;
         that.getEnd = getEnd;
         that.getType = getType;
         that.getColor = getColor;
+        that.getRepeate = getRepeate;
 
+        function getId() {
+            return id;
+        }
         function getTitle() {
             return title;
         }
 
+        function getRepeate() {
+            return repeate;
+        }
+        
         function getStart() {
             return start;
         }
@@ -315,7 +328,10 @@ var fc = {};
         headerHeight = monthOpt.headerHeight;
 
         container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
-
+        // clsName
+        if(typeof monthOpt.clsName === 'string') {
+            container.addClass(monthOpt.clsName);
+        }
         var that = this;
         that.getContainer = getContainer;
         that.render = render;
@@ -675,7 +691,10 @@ var fc = {};
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
         container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
-
+        // clsName
+        if(typeof weekOpt.clsName === 'string') {
+            container.addClass(weekOpt.clsName);
+        }
         var that = this;
         that.getContainer = getContainer;
         that.render = render;
@@ -1099,6 +1118,10 @@ var fc = {};
 
         container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
+        // clsName
+        if(typeof dayOpt.clsName === 'string') {
+            container.addClass(dayOpt.clsName);
+        }
         var that = this;
         that.getContainer = getContainer;
         that.render = render;
@@ -1366,7 +1389,18 @@ var fc = {};
      *                          {Number} height
      *                          {String} defaultView
      *                          {String} clsName
-     *                          {long, Date} date
+     *                          {long, Date} date 默认时间
+     *                          {object} monthOpt
+     *                              {Number} monthOpt.headerHeight header高度
+     *                              {String} monthOpt.clsName class扩展名称
+     *                          {object} weekOpt
+     *                              {Number} weekOpt.headerHeight header高度
+     *                              {Number} weekOpt.leftHeaderWidth 左侧导航宽度
+     *                              {String} weekOpt.clsName class扩展名称
+     *                          {object} dayOpt
+     *                              {Number} dayOpt.headerHeight header高度
+     *                              {Number} dayOpt.leftHeaderWidth 左侧导航宽度
+     *                              {String} dayOpt.clsName class扩展名称
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候

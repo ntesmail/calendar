@@ -38,7 +38,10 @@
         headerHeight = monthOpt.headerHeight;
 
         container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
-
+        // clsName
+        if(typeof monthOpt.clsName === 'string') {
+            container.addClass(monthOpt.clsName);
+        }
         var that = this;
         that.getContainer = getContainer;
         that.render = render;

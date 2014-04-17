@@ -34,6 +34,10 @@
 
         container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
 
+        // clsName
+        if(typeof dayOpt.clsName === 'string') {
+            container.addClass(dayOpt.clsName);
+        }
         var that = this;
         that.getContainer = getContainer;
         that.render = render;

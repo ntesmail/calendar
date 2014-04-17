@@ -40,7 +40,10 @@
         leftHeaderWidth = weekOpt.leftHeaderWidth;
 
         container = $('<div class="m-calendar m-calendar-' + viewName + '"></div>');
-
+        // clsName
+        if(typeof weekOpt.clsName === 'string') {
+            container.addClass(weekOpt.clsName);
+        }
         var that = this;
         that.getContainer = getContainer;
         that.render = render;

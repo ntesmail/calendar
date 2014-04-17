@@ -9,7 +9,18 @@
      *                          {Number} height
      *                          {String} defaultView
      *                          {String} clsName
-     *                          {long, Date} date
+     *                          {long, Date} date 默认时间
+     *                          {object} monthOpt
+     *                              {Number} monthOpt.headerHeight header高度
+     *                              {String} monthOpt.clsName class扩展名称
+     *                          {object} weekOpt
+     *                              {Number} weekOpt.headerHeight header高度
+     *                              {Number} weekOpt.leftHeaderWidth 左侧导航宽度
+     *                              {String} weekOpt.clsName class扩展名称
+     *                          {object} dayOpt
+     *                              {Number} dayOpt.headerHeight header高度
+     *                              {Number} dayOpt.leftHeaderWidth 左侧导航宽度
+     *                              {String} dayOpt.clsName class扩展名称
      *
      * @param {[type]} settings 设置
      *                          {function} windowResize 窗口resize的时候
