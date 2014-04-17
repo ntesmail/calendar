@@ -19,6 +19,7 @@ module.exports = function(grunt) {
                     "src/util.js",
                     "src/Event.js",
                     "src/EventManager.js",
+                    "src/view/TimeBlock.js",
                     "src/view/MonthView.js",
                     "src/view/WeekView.js",
                     "src/view/DayView.js",

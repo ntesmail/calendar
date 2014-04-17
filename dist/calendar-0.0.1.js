@@ -303,6 +303,135 @@ var fc = {};
 
 (function() {
 
+    fc.TimeBlock = TimeBlock;
+
+
+    /**
+     * 某一个的块
+     * @param {object} date 数据
+     * @param {View} view 视图
+     */
+    function TimeBlock(data, view) {
+        var container,
+            width,
+            height,
+            posTop,
+            posLeft,
+            currentDate;
+
+        // 容器的样式
+        container = $('<div class="can can-block"></div>');
+        width = data.width;
+        height = data.height;
+        posTop = data.posTop;
+        posLeft = data.posLeft;
+        // 当前时间
+        currentDate = data.date;
+
+        // public
+        var that = this;
+        that.getContainer = getContainer;
+        that.render = render;
+        that.getDate = getDate;
+        that.isCurrentMonth = isCurrentMonth;
+        that.resize = resize;
+        that.destroy = destroy;
+        that.getViewName = getViewName;
+        that.getWidth = getWidth;
+        that.getHeight = getHeight;
+        // render
+        that.render();
+        /**
+         * 获取容器
+         * @return {Dom} 容器对象
+         */
+        function getContainer() {
+            return container;
+        }
+
+        /**
+         * 获取容器
+         * @return {Date} 当前日期对象
+         */
+        function getDate() {
+            return currentDate;
+        }
+
+        /**
+         * 获取view name
+         * @return {string} viewname
+         */
+        function getViewName () {
+            return view.getViewName();
+        }
+
+        /**
+         * 获取宽度
+         * @return {string} width
+         */
+        function getWidth() {
+            return width;
+        }
+
+        /**
+         * 获取高度
+         * @return {string} height
+         */
+        function getHeight () {
+            return height;
+        }
+        /**
+         * 是否当月
+         * @return {Boolean} 是否当月
+         */
+        function isCurrentMonth () {
+            return view.getCurrentMonth() === currentDate.getMonth();
+        }
+
+        /**
+         * 生成ui
+         * @return {void}
+         */
+        function render() {
+            resize(data.width, data.height, data.posTop, data.posLeft);
+            if(fc.util.isSameDay(currentDate, new Date())) {
+                container.addClass('can-crt');
+            }
+        }
+
+        /**
+         * 销毁
+         * @return {void}
+         */
+        function destroy() {
+            container = null;
+        }
+        /**
+         * resize
+         * @param  {Number} _width  宽度
+         * @param  {Number} _height 高度
+         * @param  {Number} _top    上
+         * @param  {Number} _left   左定位
+         * @return {void}
+         */
+        function resize(_width, _height, _top, _left) {
+            width = _width;
+            height = _height;
+            posTop = _top;
+            posLeft = _left;
+            // 重新renderUI
+            container.css({
+                width: width,
+                height: height,
+                top: posTop,
+                left: posLeft
+            });
+        }
+    }
+
+})();
+(function() {
+
     fc.MonthView = MonthView;
 
     var viewName = 'month';
@@ -356,7 +485,15 @@ var fc = {};
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
+        that.getViewName = getViewName;
 
+        /**
+         * 获取view name
+         * @return {string} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -479,7 +616,7 @@ var fc = {};
                         // posLeft: blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new MonthDayBlock(dayData, that);
+                    var dayBlock = new fc.TimeBlock(dayData, that);
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
@@ -556,111 +693,6 @@ var fc = {};
     }
 
 
-    /**
-     * 某一天的块
-     * @param {[type]} date [description]
-     */
-    function MonthDayBlock(data, view) {
-        var container,
-            width,
-            height,
-            posTop,
-            posLeft,
-            currentDate;
-
-        // 容器的样式
-        container = $('<div class="can can-block"></div>');
-        width = data.width;
-        height = data.height;
-        posTop = data.posTop;
-        posLeft = data.posLeft;
-        // 当前时间
-        currentDate = data.date;
-
-        // public
-        var that = this;
-        that.getContainer = getContainer;
-        that.render = render;
-        that.getDate = getDate;
-        that.isCurrentMonth = isCurrentMonth;
-        that.resize = resize;
-        that.destroy = destroy;
-        that.getViewName = getViewName;
-
-        // render
-        that.render();
-        /**
-         * 获取容器
-         * @return {Dom} 容器对象
-         */
-        function getContainer() {
-            return container;
-        }
-
-        /**
-         * 获取容器
-         * @return {Date} 当前日期对象
-         */
-        function getDate() {
-            return currentDate;
-        }
-
-        /**
-         * 获取view name
-         * @return {stirng} viewname
-         */
-        function getViewName () {
-            return viewName;
-        }
-        /**
-         * 是否当月
-         * @return {Boolean} 是否当月
-         */
-        function isCurrentMonth () {
-            return view.getCurrentMonth() === currentDate.getMonth();
-        }
-
-        /**
-         * 生成ui
-         * @return {void}
-         */
-        function render() {
-            resize(data.width, data.height, data.posTop, data.posLeft);
-            if(fc.util.isSameDay(currentDate, new Date())) {
-                container.addClass('can-crt');
-            }
-        }
-
-        /**
-         * 销毁
-         * @return {void}
-         */
-        function destroy() {
-            container = null;
-        }
-        /**
-         * resize
-         * @param  {Number} _width  宽度
-         * @param  {Number} _height 高度
-         * @param  {Number} _top    上
-         * @param  {Number} _left   左定位
-         * @return {void}
-         */
-        function resize(_width, _height, _top, _left) {
-            width = _width;
-            height = _height;
-            posTop = _top;
-            posLeft = _left;
-            // 重新renderUI
-            container.css({
-                width: width,
-                height: height,
-                top: posTop,
-                left: posLeft
-            });
-        }
-    }
-
 })();
 (function() {
 
@@ -719,7 +751,15 @@ var fc = {};
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
-
+        that.getViewName = getViewName;
+        
+        /**
+         * 获取view name
+         * @return {string} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -873,7 +913,7 @@ var fc = {};
                         // posLeft: leftHeaderWidth + blockWidth * j,
                         date: dayDate
                     };
-                    var dayBlock = new WeekTimeBlock(dayData, that);
+                    var dayBlock = new fc.TimeBlock(dayData, that);
 
                     // 设置一下颜色等以作区别
                     if (dayDate.getMonth() !== currentMonth) {
@@ -980,119 +1020,6 @@ var fc = {};
     }
 
 
-    /**
-     * 某一天的块
-     * @param {[type]} date [description]
-     */
-    function WeekTimeBlock(data, view) {
-        var container,
-            width,
-            height,
-            posTop,
-            posLeft,
-            currentDate;
-
-        // 容器的样式
-        container = $('<div class="can can-block"></div>');
-        width = data.width;
-        height = data.height;
-        posTop = data.posTop;
-        posLeft = data.posLeft;
-        // 当前时间
-        currentDate = data.date;
-
-        // public
-        var that = this;
-        that.getContainer = getContainer;
-        that.render = render;
-        that.getDate = getDate;
-        that.isCurrentMonth = isCurrentMonth;
-        that.resize = resize;
-        that.destroy = destroy;
-        that.getViewName = getViewName;
-        // render
-        that.render();
-        /**
-         * 获取容器
-         * @return {Dom} 容器对象
-         */
-        function getContainer() {
-            return container;
-        }
-
-        /**
-         * 获取view name
-         * @return {stirng} viewname
-         */
-        function getViewName () {
-            return viewName;
-        }
-        /**
-         * 获取容器
-         * @return {Date} 当前日期对象
-         */
-        function getDate() {
-            return currentDate;
-        }
-
-        /**
-         * 生成ui
-         * @return {void}
-         */
-        function render() {
-            resize(data.width, data.height, data.posTop, data.posLeft);
-            if(fc.util.isSameDay(currentDate, new Date())) {
-                container.addClass('can-crt');
-            }
-        }
-
-        /**
-         * 是否当月
-         * @return {Boolean} 是否当月
-         */
-        function isCurrentMonth () {
-            return view.getCurrentMonth() === currentDate.getMonth();
-        }
-        /**
-         * 销毁
-         * @return {void}
-         */
-        function destroy() {
-            container = null;
-        }
-        /**
-         * resize
-         * @param  {Number} _width  宽度
-         * @param  {Number} _height 高度
-         * @param  {Number} _top    上
-         * @param  {Number} _left   左定位
-         * @return {void}
-         */
-        function resize(_width, _height, _top, _left) {
-            width = _width;
-            height = _height;
-            posTop = _top;
-            posLeft = _left;
-            // 重新renderUI
-            container.css({
-                width: width,
-                height: height,
-                top: posTop,
-                left: posLeft
-            });
-            // 检查一下
-            checkOverflow();
-        }
-
-        /**
-         * 检查是不是超出了
-         * @return {void}
-         */
-        function checkOverflow() {
-            // TODO
-        }
-
-    }
 
 })();
 (function() {
@@ -1145,6 +1072,15 @@ var fc = {};
         that.getNext = getNext;
         that.getPrev = getPrev;
         that.resize = resize;
+        that.getViewName = getViewName;
+
+        /**
+         * 获取view name
+         * @return {string} viewname
+         */
+        function getViewName () {
+            return viewName;
+        }
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -1253,7 +1189,7 @@ var fc = {};
                                 date: showEvents[0].getStart()
                             };
                             // 这个block是否显示跟里面的events数量相关
-                            var block = new DayTimeBlock(dayData, that);
+                            var block = new fc.TimeBlock(dayData, that);
                             blockList.push(block);
                             // 事件，不需要filter
                             calendar.renderEvents(block, showEvents, false);
@@ -1295,100 +1231,6 @@ var fc = {};
         }
     }
 
-
-    /**
-     * 某一天的块
-     * @param {[type]} date [description]
-     */
-    function DayTimeBlock(data, settings, dayOpt) {
-        var container,
-            width,
-            height,
-            posTop,
-            posLeft,
-            currentDate;
-
-        // 容器的样式
-        container = new $('<div class="can can-block"></div>');
-        width = data.width;
-        // 当前时间
-        currentDate = data.date;
-
-        // public
-        var that = this;
-        that.getContainer = getContainer;
-        that.render = render;
-        that.getDate = getDate;
-        that.resize = resize;
-        that.destroy = destroy;
-        that.getViewName = getViewName;
-        that.isCurrentMonth = isCurrentMonth;
-        // render
-        that.render();
-
-        /**
-         * 获取容器
-         * @return {Dom} 容器对象
-         */
-        function getContainer() {
-            return container;
-        }
-
-        /**
-         * 获取容器
-         * @return {Date} 当前日期对象
-         */
-        function getDate() {
-            return currentDate;
-        }
-
-        /**
-         * 获取view name
-         * @return {stirng} viewname
-         */
-        function getViewName () {
-            return viewName;
-        }
-
-        /**
-         * 是否当前月
-         * @return {Boolean} yes
-         */
-        function isCurrentMonth () {
-            return true;
-        }
-
-        /**
-         * 生成ui
-         * @return {void}
-         */
-        function render() {
-            resize(data.width);
-            
-        }
-
-        /**
-         * 销毁
-         * @return {void}
-         */
-        function destroy() {
-            container.remove();
-            container = null;
-        }
-        /**
-         * resize
-         * @param  {Number} _width  宽度
-         * @return {void}
-         */
-        function resize(_width) {
-            width = _width;
-
-            // 重新renderUI
-            container.css({
-                width: width
-            });
-        }
-    }
 
 })();
 (function() {
