@@ -323,7 +323,7 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            if(isCurrentMonth() && currentDate.getDate() === new Date().getDate()) {
+            if(fc.util.isSameDay(currentDate, new Date())) {
                 container.addClass('can-crt');
             }
         }

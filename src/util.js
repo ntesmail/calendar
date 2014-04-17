@@ -5,6 +5,7 @@
     fc.util.getDayRange = getDayRange;
     fc.util.clearTime = clearTime;
     fc.util.getDayNumber = getDayNumber;
+    fc.util.isSameDay = isSameDay;
     fc.util.filterEvents = filterEvents;
     fc.util.hide = hide;
     fc.util.show = show;
@@ -105,6 +106,18 @@
         clearTime(day);
         // 取得天数
         return Math.floor(day.getTime() / (24 * 60 * 60 * 1000));
+    }
+
+    /**
+     * 是否同一天
+     * @param  {Date}  d1 时间1
+     * @param  {Date}  d2 时间2
+     * @return {Boolean}    是否同一天
+     */
+    function isSameDay(d1,d2) {
+        return d1.getFullYear() === d2.getFullYear() 
+            && d1.getMonth() === d2.getMonth() 
+            && d1.getDate() === d2.getDate();
     }
 
     /**
