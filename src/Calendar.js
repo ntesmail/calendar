@@ -34,6 +34,8 @@
      *                              function(timeBlock, showEvents) block 事件
      *                          {function} onViewChanged
      *                              function(view) 视图切换了
+     *                          {function} onSizeChanged
+     *                              function(width,height) 视图大小切换了
      */
     function Calendar(data, settings) {
         var events,
@@ -59,6 +61,8 @@
             onRenderVerticalHeader = settings.onRenderVerticalHeader,
             // ondestroy
             onDestroy = settings.onDestroy,
+            // on size changed
+            onSizeChanged = settings.onSizeChanged,
             // event缓存管理
             eventManager,
             resizeTimeout;
@@ -121,9 +125,27 @@
         that.renderVerticalHeader = renderVerticalHeader;
         // 销毁
         that.onDestroy = onDestroy;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
 
         // render
         that.render();
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return currentView.getWidth();
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return currentView.getHeight();
+        }
+
         /**
          * 生成ui
          * @return {void}
@@ -294,6 +316,9 @@
                 }
                 resizeTimeout = setTimeout(function() {
                     currentView.resize(width, height);
+                    if(typeof onSizeChanged === 'function') {
+                        onSizeChanged(width, height);
+                    }
                 }, 200);
             }
         }

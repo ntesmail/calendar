@@ -486,6 +486,24 @@ var fc = {};
         that.getPrev = getPrev;
         that.resize = resize;
         that.getViewName = getViewName;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
+
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return containerWidth;
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return containerHeight;
+        }
 
         /**
          * 获取view name
@@ -494,6 +512,7 @@ var fc = {};
         function getViewName () {
             return viewName;
         }
+
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -509,6 +528,7 @@ var fc = {};
         function show() {
             fc.util.show(container);
         }
+
         function destroy() {
             // 销毁
             if(calendar.onDestroy) {
@@ -536,6 +556,7 @@ var fc = {};
         function getCurrentMonth() {
             return currentMonth;
         }
+        
         /**
          * 下个月
          * @return {Date} 下个月
@@ -752,6 +773,24 @@ var fc = {};
         that.getPrev = getPrev;
         that.resize = resize;
         that.getViewName = getViewName;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
+
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return containerWidth;
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return containerHeight;
+        }
         
         /**
          * 获取view name
@@ -1073,6 +1112,24 @@ var fc = {};
         that.getPrev = getPrev;
         that.resize = resize;
         that.getViewName = getViewName;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
+
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return containerWidth;
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return container.height();
+        }
 
         /**
          * 获取view name
@@ -1271,6 +1328,8 @@ var fc = {};
      *                              function(timeBlock, showEvents) block 事件
      *                          {function} onViewChanged
      *                              function(view) 视图切换了
+     *                          {function} onSizeChanged
+     *                              function(width,height) 视图大小切换了
      */
     function Calendar(data, settings) {
         var events,
@@ -1296,6 +1355,8 @@ var fc = {};
             onRenderVerticalHeader = settings.onRenderVerticalHeader,
             // ondestroy
             onDestroy = settings.onDestroy,
+            // on size changed
+            onSizeChanged = settings.onSizeChanged,
             // event缓存管理
             eventManager,
             resizeTimeout;
@@ -1358,9 +1419,27 @@ var fc = {};
         that.renderVerticalHeader = renderVerticalHeader;
         // 销毁
         that.onDestroy = onDestroy;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
 
         // render
         that.render();
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return currentView.getWidth();
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return currentView.getHeight();
+        }
+
         /**
          * 生成ui
          * @return {void}
@@ -1531,6 +1610,9 @@ var fc = {};
                 }
                 resizeTimeout = setTimeout(function() {
                     currentView.resize(width, height);
+                    if(typeof onSizeChanged === 'function') {
+                        onSizeChanged(width, height);
+                    }
                 }, 200);
             }
         }

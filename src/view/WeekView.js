@@ -56,6 +56,24 @@
         that.getPrev = getPrev;
         that.resize = resize;
         that.getViewName = getViewName;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
+
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return containerWidth;
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return containerHeight;
+        }
         
         /**
          * 获取view name

@@ -54,6 +54,24 @@
         that.getPrev = getPrev;
         that.resize = resize;
         that.getViewName = getViewName;
+        that.getWidth  = getWidth;
+        that.getHeight = getHeight;
+
+        /**
+         * 获取宽度
+         * @return {Number} 宽度
+         */
+        function getWidth() {
+            return containerWidth;
+        }
+
+        /**
+         * 获取高度
+         * @return {Number} 高度
+         */
+        function getHeight() {
+            return containerHeight;
+        }
 
         /**
          * 获取view name
@@ -62,6 +80,7 @@
         function getViewName () {
             return viewName;
         }
+
         /**
          * 容器对象
          * @return {Dom} 容器对象
@@ -77,6 +96,7 @@
         function show() {
             fc.util.show(container);
         }
+
         function destroy() {
             // 销毁
             if(calendar.onDestroy) {
@@ -104,6 +124,7 @@
         function getCurrentMonth() {
             return currentMonth;
         }
+        
         /**
          * 下个月
          * @return {Date} 下个月
