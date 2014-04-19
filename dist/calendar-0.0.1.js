@@ -1,4 +1,4 @@
-/*! calendar - v0.0.1 - 2014-04-17
+/*! calendar - v0.0.1 - 2014-04-19
 * https://github.com/ntesmail/calendar
 * Copyright (c) 2014 ; Licensed  */
 (function () {
@@ -976,8 +976,8 @@ var fc = {};
             containerHeight = height;
 
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight / verticalCount);
+            blockWidth = Math.floor((containerWidth - leftHeaderWidth) / 7);
+            blockHeight = Math.floor((containerHeight - headerHeight) / verticalCount);
 
             // 重新计算高宽，处理掉小数的影响
             containerWidth = blockWidth * 7;
