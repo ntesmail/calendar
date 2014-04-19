@@ -317,7 +317,7 @@
                 resizeTimeout = setTimeout(function() {
                     currentView.resize(width, height);
                     if(typeof onSizeChanged === 'function') {
-                        onSizeChanged(width, height);
+                        onSizeChanged();
                     }
                 }, 200);
             }

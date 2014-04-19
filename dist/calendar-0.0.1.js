@@ -556,7 +556,7 @@ var fc = {};
         function getCurrentMonth() {
             return currentMonth;
         }
-        
+
         /**
          * 下个月
          * @return {Date} 下个月
@@ -678,16 +678,12 @@ var fc = {};
             containerWidth = width;
             containerHeight = height;
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight / weekCount);
-
-            // 重新计算高宽，处理掉小数的影响
-            containerWidth = blockWidth * 7;
-            containerHeight = blockHeight * weekCount;
+            blockWidth = containerWidth / 7;
+            blockHeight = (containerHeight - headerHeight) / weekCount;
 
             container.css({
                 width : containerWidth,
-                height : containerHeight + headerHeight
+                height : containerHeight
             });
 
             // 头部重新定位
@@ -791,7 +787,7 @@ var fc = {};
         function getHeight() {
             return containerHeight;
         }
-        
+
         /**
          * 获取view name
          * @return {string} viewname
@@ -1015,16 +1011,12 @@ var fc = {};
             containerHeight = height;
 
             // block的高宽
-            blockWidth = Math.floor((containerWidth - leftHeaderWidth) / 7);
-            blockHeight = Math.floor((containerHeight - headerHeight) / verticalCount);
-
-            // 重新计算高宽，处理掉小数的影响
-            containerWidth = blockWidth * 7;
-            containerHeight = blockHeight * verticalCount;
+            blockWidth = (containerWidth - weekOpt.leftHeaderWidth) / 7;
+            blockHeight = (containerHeight - headerHeight) / verticalCount;
 
             container.css({
-                width : containerWidth + leftHeaderWidth,
-                height : containerHeight + headerHeight
+                width : containerWidth,
+                height : containerHeight
             });
             // 头部重新定位
             for (var i = 0; i < header.length; i++) {
@@ -1611,7 +1603,7 @@ var fc = {};
                 resizeTimeout = setTimeout(function() {
                     currentView.resize(width, height);
                     if(typeof onSizeChanged === 'function') {
-                        onSizeChanged(width, height);
+                        onSizeChanged();
                     }
                 }, 200);
             }

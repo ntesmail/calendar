@@ -74,7 +74,7 @@
         function getHeight() {
             return containerHeight;
         }
-        
+
         /**
          * 获取view name
          * @return {string} viewname
@@ -298,16 +298,12 @@
             containerHeight = height;
 
             // block的高宽
-            blockWidth = Math.floor((containerWidth - leftHeaderWidth) / 7);
-            blockHeight = Math.floor((containerHeight - headerHeight) / verticalCount);
-
-            // 重新计算高宽，处理掉小数的影响
-            containerWidth = blockWidth * 7;
-            containerHeight = blockHeight * verticalCount;
+            blockWidth = (containerWidth - weekOpt.leftHeaderWidth) / 7;
+            blockHeight = (containerHeight - headerHeight) / verticalCount;
 
             container.css({
-                width : containerWidth + leftHeaderWidth,
-                height : containerHeight + headerHeight
+                width : containerWidth,
+                height : containerHeight
             });
             // 头部重新定位
             for (var i = 0; i < header.length; i++) {

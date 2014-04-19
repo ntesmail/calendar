@@ -124,7 +124,7 @@
         function getCurrentMonth() {
             return currentMonth;
         }
-        
+
         /**
          * 下个月
          * @return {Date} 下个月
@@ -246,16 +246,12 @@
             containerWidth = width;
             containerHeight = height;
             // block的高宽
-            blockWidth = Math.floor(containerWidth / 7);
-            blockHeight = Math.floor(containerHeight / weekCount);
-
-            // 重新计算高宽，处理掉小数的影响
-            containerWidth = blockWidth * 7;
-            containerHeight = blockHeight * weekCount;
+            blockWidth = containerWidth / 7;
+            blockHeight = (containerHeight - headerHeight) / weekCount;
 
             container.css({
                 width : containerWidth,
-                height : containerHeight + headerHeight
+                height : containerHeight
             });
 
             // 头部重新定位
