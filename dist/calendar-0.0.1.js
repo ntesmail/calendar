@@ -1,4 +1,4 @@
-/*! calendar - v0.0.1 - 2014-04-19
+/*! calendar - v0.0.1 - 2014-04-22
 * https://github.com/ntesmail/calendar
 * Copyright (c) 2014 ; Licensed  */
 (function () {
@@ -1506,7 +1506,7 @@ var fc = {};
             // 更换了filter
             currentFilters = filters;
             // 切换视图
-            renderView(currentViewName);
+            renderView(currentViewName, currentDate);
         }
 
         /**
@@ -1554,6 +1554,7 @@ var fc = {};
                 // 当天时间
                 day = currentDate || new Date();
             }
+            currentDate = day;
             var viewChanged = typeof currentView !== 'undefined';
             if (currentView) {
                 currentView.destroy();

@@ -220,7 +220,7 @@
             // 更换了filter
             currentFilters = filters;
             // 切换视图
-            renderView(currentViewName);
+            renderView(currentViewName, currentDate);
         }
 
         /**
@@ -268,6 +268,7 @@
                 // 当天时间
                 day = currentDate || new Date();
             }
+            currentDate = day;
             var viewChanged = typeof currentView !== 'undefined';
             if (currentView) {
                 currentView.destroy();
