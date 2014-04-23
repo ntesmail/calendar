@@ -110,6 +110,7 @@
         that.render = render;
         that.getContainer = getContainer;
         that.getEventManager = getEventManager;
+        that.refresh = refresh;
         that.prev = prev;
         that.next = next;
         that.goDate = goDate;
@@ -159,12 +160,27 @@
             renderView(defaultView, currentDate);
         }
 
+        /**
+         * 获取这个eventManger
+         * @return {EventManager} eventManager
+         */
         function getEventManager() {
             return eventManager;
         }
 
         function getContainer() {
             return container;
+        }
+
+        /**
+         * 使用当前时间，当前视图，只刷新数据
+         * @return {void}
+         */
+        function refresh() {
+            eventManager = new fc.EventManager({
+                fetchEvents: settings.fetchEvents
+            });
+            renderView(currentViewName, currentDate);
         }
 
         /**
