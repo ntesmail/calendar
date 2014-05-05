@@ -1,4 +1,4 @@
-/*! calendar - v0.0.1 - 2014-04-23
+/*! calendar - v0.0.1 - 2014-05-05
 * https://github.com/ntesmail/calendar
 * Copyright (c) 2014 ; Licensed  */
 (function () {
@@ -17,6 +17,45 @@ var fc = {};
     fc.util.show = show;
 
     /**
+     * 判断某个年份是否为闰年
+     * @param {Number} year
+     * @returns {Boolean}
+     */
+    function isLeapYear (year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    /**
+     * 获取某个月份的天数
+     * @param {Number} month (0-11)
+     * @param {Number} year (0-11)
+     * @returns {Number}
+     */
+    function daysOfMonth (month, year) {
+        var bigMonth = {
+            0: true,
+            2: true,
+            4: true,
+            6: true,
+            7: true,
+            9: true,
+            11: true
+        };
+        if (month === 1) {
+            if (year !== undefined && isLeapYear(year)) {
+                return 29;
+            } else {
+                return 28;
+            }
+        }
+        if (bigMonth[month]) {
+            return 31;
+        } else {
+            return 30;
+        }
+    }
+
+    /**
      * 获取某一时刻所在月份起始到结束
      * @param  {Date} d 某一时刻
      * @return {Object}  包括了起始和结束时间
@@ -26,16 +65,8 @@ var fc = {};
             month = d.getMonth();
 
         var start = new Date(year, month, 1);
+        var end = new Date(year, month, daysOfMonth(month, year));
 
-        var date;
-        if(month === 1) {
-            date = year % 4 === 0 ? 29 : 28;
-        } else if(month < 6) {
-            date = month % 2 === 1 ? 30 : 31;
-        } else {
-            date = month % 2 === 0 ? 30 : 31;
-        }
-        var end = new Date(year, month, date);
         setEndTime(end);
 
         return {start : start, end: end};
@@ -88,6 +119,7 @@ var fc = {};
         d.setHours(0);
         d.setMinutes(0);
         d.setSeconds(0);
+        d.setMilliseconds(0);
         return d;
     }
 
@@ -99,6 +131,7 @@ var fc = {};
         d.setHours(23);
         d.setMinutes(59);
         d.setSeconds(59);
+        d.setMilliseconds(999);
         return d;
     }
 
@@ -1254,6 +1287,18 @@ var fc = {};
                         }
                     };
 
+                    resize(containerWidth, containerHeight);
+                } else {
+                    // 没有数据的时候
+                    // 这个block是否显示跟里面的events数量相关
+                    var block = new fc.TimeBlock({date : currentDate}, that);
+                    blockList.push(block);
+                    // 加到页面中
+                    var time = $('<div class="can can-time"></div>');
+                    container.append(time);
+                    container.append(block.getContainer());
+                    // 事件，不需要filter
+                    calendar.renderEvents(block, [], false);
                     resize(containerWidth, containerHeight);
                 }
             });
