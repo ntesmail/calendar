@@ -152,7 +152,14 @@
             // 周日到周六
             header = [];
             for (var i = 0; i < 7; i++) {
-                var head = $('<div class="can can-week"></div>');
+                var date = new Date(start);
+                date.setDate(date.getDate() + i);
+
+                var isCurrentDay = false;
+                if(fc.util.isSameDay(date, new Date())) {
+                    isCurrentDay = true;
+                }
+                var head = $('<div class="can can-week' + (isCurrentDay ? ' can-crt' : '') + '"></div>');
                 head.css({
                     width: blockWidth,
                     height: headerHeight,
@@ -161,8 +168,7 @@
                 });
                 header.push(head);
 
-                var date = new Date(start);
-                date.setDate(date.getDate() + i);
+
                 calendar.renderHeader(viewName, head, date);
 
                 container.append(header);

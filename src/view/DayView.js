@@ -196,10 +196,19 @@
                                 '</div>');
                             container.append(time);
                             container.append(block.getContainer());
+                        } else {
+                            // 没有数据的时候
+                            // 这个block是否显示跟里面的events数量相关
+                            var block = new fc.TimeBlock({date : currentDate}, that);
+                            blockList.push(block);
+                            // 加到页面中
+                            var time = $('<div class="can can-time"></div>');
+                            container.append(time);
+                            container.append(block.getContainer());
+                            // 事件，不需要filter
+                            calendar.renderEvents(block, [], false);
                         }
                     };
-
-                    resize(containerWidth, containerHeight);
                 } else {
                     // 没有数据的时候
                     // 这个block是否显示跟里面的events数量相关
@@ -211,8 +220,9 @@
                     container.append(block.getContainer());
                     // 事件，不需要filter
                     calendar.renderEvents(block, [], false);
-                    resize(containerWidth, containerHeight);
                 }
+                // resize
+                resize(containerWidth, containerHeight);
             });
             calendar.getEventManager().fetch(start, end, defer);
         }
