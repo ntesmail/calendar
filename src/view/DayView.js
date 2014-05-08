@@ -167,11 +167,11 @@
                             sortedEvents[dayEvent.getStart()] = [dayEvent];
                         }
                     }
-
+                    var eventNum = 0;
                     // 显示所有事件
                     for (var eventKey in sortedEvents) {
                         var showEvents = fc.util.filterEvents(sortedEvents[eventKey], calendar.getFilters());
-
+                        eventNum += showEvents.length;
                         if(showEvents.length > 0) {
                             // 事件时间
                             var dayData = {
@@ -192,19 +192,20 @@
                                 '</div>');
                             container.append(time);
                             container.append(block.getContainer());
-                        } else {
-                            // 没有数据的时候
-                            // 这个block是否显示跟里面的events数量相关
-                            var block = new fc.TimeBlock({date : currentDate}, that);
-                            blockList.push(block);
-                            // 加到页面中
-                            var time = $('<div class="can can-time"></div>');
-                            container.append(time);
-                            container.append(block.getContainer());
-                            // 事件，不需要filter
-                            calendar.renderEvents(block, [], false);
                         }
                     };
+                    if(eventNum === 0) {
+                        // 没有数据的时候
+                        // 这个block是否显示跟里面的events数量相关
+                        var block = new fc.TimeBlock({date : currentDate}, that);
+                        blockList.push(block);
+                        // 加到页面中
+                        var time = $('<div class="can can-time"></div>');
+                        container.append(time);
+                        container.append(block.getContainer());
+                        // 事件，不需要filter
+                        calendar.renderEvents(block, [], false);
+                    }
                 } else {
                     // 没有数据的时候
                     // 这个block是否显示跟里面的events数量相关
