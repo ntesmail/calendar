@@ -157,10 +157,6 @@
                 var dayKey = fc.util.getDayNumber(currentDate);
                 var dayEvents = events[dayKey];
                 if (typeof dayEvents !== 'undefined' && dayEvents.length > 0) {
-                    // 先按时间进行排序处理
-                    dayEvents.sort(function(x, y) {
-                        return x.getStart() - y.getStart();
-                    });
                     // 合并时间相同的项
                     var sortedEvents = {};
                     for (var i = 0; i < dayEvents.length; i++) {

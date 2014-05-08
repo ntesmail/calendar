@@ -55,15 +55,22 @@
                 // 时间范围内的全部重置
                 events[i] = [];
             }
+            var days = [];
             for (var i = 0; i < evts.length; i++) {
                 var eventDay = fc.util.getDayNumber(evts[i].start);
                 // 放进去event
                 if(typeof events[eventDay] !== 'undefined') {
                     events[eventDay].push(new fc.Event(evts[i]));
-                } else {
-                    events[eventDay] = [];
                 }
             };
+            for (var i = checkStart; i <= checkEnd; i++) {
+                // 时间范围内的全部排序
+                if(events[i].length > 0) {
+                    events[i].sort(function(x, y) {
+                        return x.getStart() - y.getStart();
+                    });
+                }
+            }
         }   
     }
 })();
