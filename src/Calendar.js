@@ -207,12 +207,12 @@
 
         /**
          * 跳到某一天
-         * @param  {string} viewName 视图名称
+         * @param  {string} viewName 视图名称，默认使用当前视图
          * @param  {Date} day 跳到某天
          * @return {void}
          */
         function goDate(viewName, day) {
-             renderView(viewName, day);
+             renderView(viewName || currentViewName, day);
         }
 
         /**
