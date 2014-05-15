@@ -206,11 +206,6 @@
                         date: dayDate
                     };
                     var dayBlock = new fc.TimeBlock(dayData, that);
-
-                    // 设置一下颜色等以作区别
-                    if (dayDate.getMonth() !== currentMonth) {
-                        // TODO
-                    }
                     // 加到页面中
                     container.append(dayBlock.getContainer());
 
@@ -219,6 +214,12 @@
             }
 
             resize(containerWidth, containerHeight)
+
+            for (var i = 0; i < blockList.length; i++) {
+                // 相关的事件
+                var dayBlock = blockList[i];
+                calendar.preRenderEventsBlock(dayBlock);
+            };
 
             // 统一添加日历事件
             // 获取的

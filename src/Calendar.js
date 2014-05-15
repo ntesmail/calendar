@@ -51,6 +51,7 @@
             currentView,
             // 当前filters
             currentFilters = data.filters,
+            onPreRenderEventsBlock = settings.onPreRenderEventsBlock,
             // renderEvents
             onRenderEvents = settings.onRenderEvents,
             // render header
@@ -118,6 +119,7 @@
         that.changeFilters = changeFilters;
         that.getFilters = getFilters;
         that.resize = resize;
+        that.preRenderEventsBlock = preRenderEventsBlock;
         // render
         that.renderEvents = renderEvents;
         // render header
@@ -128,7 +130,6 @@
         that.onDestroy = onDestroy;
         that.getWidth  = getWidth;
         that.getHeight = getHeight;
-
         // render
         that.render();
         /**
@@ -247,6 +248,14 @@
             return currentFilters;
         }
 
+        /**
+         * render
+         * @param  {Block} timeBlock block
+         * @return {void}
+         */
+        function preRenderEventsBlock(timeBlock) {
+            onPreRenderEventsBlock(timeBlock);
+        }
         /**
          * render
          * @param  {Block} timeBlock block

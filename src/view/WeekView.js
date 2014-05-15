@@ -256,6 +256,11 @@
 
             resize(containerWidth, containerHeight);
 
+            for (var i = 0; i < blockList.length; i++) {
+                var dayBlock = blockList[i];
+                calendar.preRenderEventsBlock(dayBlock);
+            };
+
             // 统一添加日历事件
             // 获取的
             var defer = $.Deferred();
