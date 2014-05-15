@@ -253,15 +253,8 @@
          * @param  {Array} events    events array
          * @return {void}
          */
-        function renderEvents(timeBlock, events, filter) {
-            if(filter) {
-                // 当前的filters
-                var showEvents = fc.util.filterEvents(events, currentFilters);
-
-                onRenderEvents(timeBlock, showEvents);
-            } else {
-                onRenderEvents(timeBlock, events);
-            }
+        function renderEvents(timeBlock, events) {
+            onRenderEvents(timeBlock, events);
         }
 
         function renderHeader(viewName, headBlock, date) {

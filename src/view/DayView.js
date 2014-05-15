@@ -170,7 +170,7 @@
                     var eventNum = 0;
                     // 显示所有事件
                     for (var eventKey in sortedEvents) {
-                        var showEvents = fc.util.filterEvents(sortedEvents[eventKey], calendar.getFilters());
+                        var showEvents = sortedEvents[eventKey];
                         eventNum += showEvents.length;
                         if(showEvents.length > 0) {
                             // 事件时间

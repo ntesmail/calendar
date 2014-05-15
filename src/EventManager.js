@@ -5,8 +5,6 @@
         // 获取event的方式
         var fetchEvents = data.fetchEvents;
 
-        var events = [];
-
         // public
         this.fetch = fetch;
 
@@ -14,31 +12,32 @@
             // 是否都有了在events中
             var checkStart = fc.util.getDayNumber(start);
             var checkEnd = fc.util.getDayNumber(end);
-            var needFetch = false;
-            for (var i = checkStart; i <= checkEnd; i++) {
-                var evts = events[i];
-                if(typeof evts === 'undefined') {
-                    // no cache
-                    needFetch = true;
-                    var defer2 = $.Deferred();
-                    defer2.done(function(start, end, evts){
-                        // 更新到cache
-                        updateEventsCache(checkStart, checkEnd, evts);
-                        // 返回event的copy
-                        defer.resolve(getSubArray(checkStart, checkEnd, events));
-                    });
-                    defer2.fail(function(){
-                        // 一样
-                        defer.resolve(getSubArray(checkStart, checkEnd, events));
-                    });
-                    // 通过外部接口获取
-                    fetchEvents(start, end, defer2);
-                    return;
-                }
-            }
+            // 不使用缓存了
+            // var needFetch = false;
+            // for (var i = checkStart; i <= checkEnd; i++) {
+            //     var evts = events[i];
+            //     if(typeof evts === 'undefined') {
+            //         // no cache
+            //         needFetch = true;
+            //         return;
+            //     }
+            // }
+            var defer2 = $.Deferred();
+            defer2.done(function(start, end, evts){
+                // 更新到cache
+                var events = formatEvents(checkStart, checkEnd, evts);
+                // 返回event的copy
+                defer.resolve(getSubArray(checkStart, checkEnd, events));
+            });
+            defer2.fail(function(){
+                // 一样
+                defer.resolve(getSubArray(checkStart, checkEnd, []));
+            });
+            // 通过外部接口获取
+            fetchEvents(start, end, defer2);
 
             // 都在缓存里面
-            defer.resolve(getSubArray(checkStart, checkEnd, events));
+            // defer.resolve(getSubArray(checkStart, checkEnd, events));
         }
 
         function getSubArray(start, end, array) {
@@ -49,8 +48,8 @@
             return copy;
         }
 
-        function updateEventsCache(checkStart, checkEnd, evts) {
-
+        function formatEvents(checkStart, checkEnd, evts) {
+            var events = [];
             for (var i = checkStart; i <= checkEnd; i++) {
                 // 时间范围内的全部重置
                 events[i] = [];
@@ -71,6 +70,7 @@
                     });
                 }
             }
+            return events;
         }   
     }
 })();
