@@ -11,6 +11,8 @@
         function fetch(start, end, defer) {
             // 是否都有了在events中
             var checkStart = fc.util.getDayNumber(start);
+            end = new Date(end);
+            end.setDate(end.getDate() + 1);
             var checkEnd = fc.util.getDayNumber(end);
             // 不使用缓存了
             // var needFetch = false;
@@ -50,7 +52,7 @@
 
         function formatEvents(checkStart, checkEnd, evts) {
             var events = [];
-            for (var i = checkStart; i <= checkEnd; i++) {
+            for (var i = checkStart; i < checkEnd; i++) {
                 // 时间范围内的全部重置
                 events[i] = [];
             }
@@ -62,7 +64,7 @@
                     events[eventDay].push(new fc.Event(evts[i]));
                 }
             };
-            for (var i = checkStart; i <= checkEnd; i++) {
+            for (var i = checkStart; i < checkEnd; i++) {
                 // 时间范围内的全部排序
                 if(events[i].length > 0) {
                     events[i].sort(function(x, y) {
