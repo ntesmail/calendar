@@ -209,6 +209,8 @@
                     // 事件，不需要filter
                     calendar.renderEvents(block, [], false);
                 }
+                // 结束
+                calendar.renderEventsCompleted(viewName);
                 // resize
                 resize(containerWidth, containerHeight);
             });

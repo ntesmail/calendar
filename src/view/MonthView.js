@@ -233,6 +233,7 @@
                     var dayKey = fc.util.getDayNumber(dayDate);
                     calendar.renderEvents(dayBlock, events[dayKey], true);
                 };
+                calendar.renderEventsCompleted(viewName);
             })
             calendar.getEventManager().fetch(start, end, defer);
         }

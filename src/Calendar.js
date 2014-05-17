@@ -54,6 +54,8 @@
             onPreRenderEventsBlock = settings.onPreRenderEventsBlock,
             // renderEvents
             onRenderEvents = settings.onRenderEvents,
+            // renderEventsCompleted
+            onRenderEventsCompleted = settings.onRenderEventsCompleted,
             // render header
             onRenderHeader = settings.onRenderHeader,
             // change view
@@ -120,8 +122,10 @@
         that.getFilters = getFilters;
         that.resize = resize;
         that.preRenderEventsBlock = preRenderEventsBlock;
-        // render
+        // renderEvents
         that.renderEvents = renderEvents;
+        // renderEventsCompleted
+        that.renderEventsCompleted = renderEventsCompleted;
         // render header
         that.renderHeader = renderHeader;
         // render vertical header
@@ -265,7 +269,15 @@
         function renderEvents(timeBlock, events) {
             onRenderEvents(timeBlock, events);
         }
-
+        /**
+         * render
+         * @param  {string} viewName
+         * @return {void}
+         */
+        function renderEventsCompleted(viewName) {
+            onRenderEventsCompleted(viewName);
+        }
+        
         function renderHeader(viewName, headBlock, date) {
             onRenderHeader(viewName, headBlock, date);
         }

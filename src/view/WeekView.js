@@ -293,7 +293,9 @@
                     // 过滤一下events
                     calendar.renderEvents(block, sortedEvents, true);
                 };
-            })
+
+                calendar.renderEventsCompleted(viewName);
+            });
             calendar.getEventManager().fetch(start, end, defer);
         }
 
