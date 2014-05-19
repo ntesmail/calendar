@@ -14,6 +14,7 @@
             height,
             posTop,
             posLeft,
+            leftBlock,
             currentDate;
 
         // 容器的样式
@@ -22,6 +23,7 @@
         height = data.height;
         posTop = data.posTop;
         posLeft = data.posLeft;
+        leftBlock = data.leftBlock;
         // 当前时间
         currentDate = data.date;
 
@@ -36,6 +38,7 @@
         that.getViewName = getViewName;
         that.getWidth = getWidth;
         that.getHeight = getHeight;
+        that.getLeftBlock = getLeftBlock;
         // render
         that.render();
         /**
@@ -44,6 +47,14 @@
          */
         function getContainer() {
             return container;
+        }
+        
+        /**
+         * 获取左侧时间
+         * @return {Dom} 左侧节点
+         */
+        function getLeftBlock() {
+            return leftBlock;
         }
 
         /**

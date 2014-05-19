@@ -173,24 +173,27 @@
                         var showEvents = sortedEvents[eventKey];
                         eventNum += showEvents.length;
                         if(showEvents.length > 0) {
+                            var startTime = showEvents[0].getStart();
+                            var min = startTime.getMinutes();
+                            var showTime = startTime.getHours() + ':' + (min >= 10 ? min : '0' + min);
+                            // 加到页面中，先隐藏
+                            var time = 
+                                $('<div class="can can-time f-hide">' +
+                                    '<span class="w-time">' + showTime + '</span>' +
+                                '</div>');
+                            container.append(time);
                             // 事件时间
                             var dayData = {
                                 // width: blockWidth,
-                                date: showEvents[0].getStart()
+                                date: startTime,
+                                leftBlock : time
                             };
                             // 这个block是否显示跟里面的events数量相关
                             var block = new fc.TimeBlock(dayData, that);
                             blockList.push(block);
                             // 事件，不需要filter
+                            block.getContainer().addClass('f-hide');
                             calendar.renderEvents(block, showEvents, false);
-                            var min = dayData.date.getMinutes();
-                            var showTime = dayData.date.getHours() + ':' + (min >= 10 ? min : '0' + min);
-                            // 加到页面中
-                            var time = 
-                                $('<div class="can can-time">' +
-                                    '<span class="w-time">' + showTime + '</span>' +
-                                '</div>');
-                            container.append(time);
                             container.append(block.getContainer());
                         }
                     };
