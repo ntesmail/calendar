@@ -156,7 +156,7 @@
                 date.setDate(date.getDate() + i);
 
                 var isCurrentDay = false;
-                if(fc.util.isSameDay(date, new Date())) {
+                if(fc.util.isSameDay(date, fc.util.getNow())) {
                     isCurrentDay = true;
                 }
                 var head = $('<div class="can can-week' + (isCurrentDay ? ' can-crt' : '') + '"></div>');

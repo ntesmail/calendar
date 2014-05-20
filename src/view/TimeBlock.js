@@ -102,7 +102,7 @@
          */
         function render() {
             resize(data.width, data.height, data.posTop, data.posLeft);
-            if(fc.util.isSameDay(currentDate, new Date())) {
+            if(fc.util.isSameDay(currentDate, fc.util.getNow())) {
                 container.addClass('can-crt');
             }
         }

@@ -10,6 +10,7 @@
      *                          {String} defaultView
      *                          {String} clsName
      *                          {long, Date} date 默认时间
+     *                          {long} offset 客户端时间偏移 now = new Date(offset + new Date().getTime())
      *                          {object} monthOpt
      *                              {Number} monthOpt.headerHeight header高度
      *                              {String} monthOpt.clsName class扩展名称
@@ -108,6 +109,9 @@
             currentDate = new Date(data.date);
         }
 
+        if(typeof data.offset === 'number') {
+            fc.util.setTimeOffset(data.offset);
+        }
         var that = this;
         // public
         that.render = render;
@@ -296,7 +300,7 @@
             // render
             if (!day) {
                 // 当天时间
-                day = currentDate || new Date();
+                day = currentDate || fc.util.getNow();
             }
             currentDate = day;
             var viewChanged = typeof currentView !== 'undefined';

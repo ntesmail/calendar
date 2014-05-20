@@ -9,7 +9,9 @@
     fc.util.filterEvents = filterEvents;
     fc.util.hide = hide;
     fc.util.show = show;
-
+    fc.util.setTimeOffset = setTimeOffset;
+    fc.util.getNow = getNow;
+    var offset = 0;
     /**
      * 判断某个年份是否为闰年
      * @param {Number} year
@@ -17,6 +19,22 @@
      */
     function isLeapYear (year) {
         return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    /**
+     * 设置客户端时间偏移
+     * @param {long} off 偏移量
+     */
+    function setTimeOffset(off) {
+        offset = off;
+    }
+
+    /**
+     * 获取当前时间
+     * @return {Date} 时间
+     */
+    function getNow() {
+        return new Date(new Date().getTime() + offset);
     }
 
     /**
