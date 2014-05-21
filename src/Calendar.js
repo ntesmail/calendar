@@ -138,6 +138,8 @@
         that.onDestroy = onDestroy;
         that.getWidth  = getWidth;
         that.getHeight = getHeight;
+        that.getViewName = getViewName;
+
         // render
         that.render();
         /**
@@ -154,6 +156,14 @@
          */
         function getHeight() {
             return currentView.getHeight();
+        }
+
+        /**
+         * 获取当前的viewName
+         * @return {String} viewName
+         */
+        function getViewName() {
+            return currentViewName;
         }
 
         /**
